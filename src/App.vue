@@ -67,8 +67,113 @@
           </v-container>
         </vq-form>
       </v-container>
-    </v-window-item></v-window
-  >
+    </v-window-item>
+
+    <v-window-item :value="2">
+      <v-container>
+        <v-card>
+          <v-responsive>
+            <vq-table-filter :id="datatableId">
+              <title-row>
+                <template #default>
+                  <v-row justify="center">
+                    <v-col lg="3" md="3" sm="3" xs="12">
+                      <vq-text-field
+                        name="search"
+                        class="pa-2"
+                        variant="underlined"
+                        clearable
+                        hide-details
+                        label="Search"
+                      >
+                      </vq-text-field>
+                    </v-col>
+                  </v-row>
+                </template>
+              </title-row>
+            </vq-table-filter> </v-responsive></v-card
+      ></v-container>
+      <v-container>
+        <v-card>
+          <v-responsive>
+            <VqDataTable :headers="headers" :id="datatableId" action="user">
+              <template #item="{ item, index }">
+                <tr>
+                  <VqSerialNo :index="index + 1" />
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.createdAt }}</td>
+                </tr>
+              </template>
+            </VqDataTable>
+          </v-responsive>
+        </v-card>
+      </v-container>
+    </v-window-item>
+    <v-window-item :value="3">
+      <v-container>
+        <v-card>
+          <v-responsive>
+            <vq-table-filter :id="id">
+              <title-row>
+                <template #default>
+                  <v-row justify="center">
+                    <v-col lg="3" md="3" sm="3" xs="12">
+                      <vq-text-field
+                        name="search"
+                        class="pa-2"
+                        variant="underlined"
+                        clearable
+                        hide-details
+                        label="Search"
+                      >
+                      </vq-text-field>
+                    </v-col>
+                  </v-row>
+                </template>
+              </title-row>
+            </vq-table-filter> </v-responsive></v-card
+      ></v-container>
+
+      <v-container>
+        <v-card>
+          <v-responsive>
+            <VqList density="compact" action="user" :id="id" :page-size="10">
+              <template #default="{ items }">
+                <v-table>
+                  <thead>
+                    <tr>
+                      <th class="text-left">Id</th>
+                      <th class="text-left">Name</th>
+                      <th class="text-left">Email</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="items.length">
+                    <tr v-for="item in items" :key="item.id">
+                      <td>{{ item.id }}</td>
+                      <td>{{ item.name }}</td>
+                      <td>{{ item.email }}</td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr>
+                      <td>No record founds.</td>
+                    </tr>
+                  </tbody>
+                </v-table>
+                <v-sheet
+                  class="mt-auto align-center justify-center d-flex px-2 pa-2 ma-2"
+                  color="grey lighten-6"
+                >
+                  <vq-list-load-more-btn> </vq-list-load-more-btn>
+                </v-sheet>
+              </template>
+            </VqList>
+          </v-responsive>
+        </v-card>
+      </v-container>
+    </v-window-item>
+  </v-window>
 </template>
 
 <script setup lang="ts">
@@ -77,6 +182,8 @@ import { VqSubmitBtn } from "@qnx/vuetify";
 import { AxiosError } from "axios";
 import { ref } from "vue";
 import { object, string, number, date } from "yup";
+import { useVqList } from "@qnx/vuetify";
+import { useVqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
 
 const tab = ref(1);
 
@@ -98,4 +205,28 @@ const handleResponse = (res: any) => {
 const errorHandler = (res: AxiosError<ApiResponseValue>) => {
   alert(JSON.stringify(res.response?.data));
 };
+
+//List
+const id = "user_list";
+
+const VqList = useVqList<{
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}>();
+
+//datatable
+const datatableId = "user_data_table";
+const VqDataTable = useVqDataTable<{
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+}>();
+const headers = collectVqHeaders([
+  { title: "Name", key: "name" },
+  { title: "Email", key: "email" },
+  { title: "Created At", key: "createdAt" },
+]);
 </script>
