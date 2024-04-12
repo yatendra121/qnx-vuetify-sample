@@ -8,6 +8,7 @@
   <v-window v-model="tab">
     <v-window-item :value="1">
       <v-container fluid>
+        <!-- <FormComponent /> -->
         <vq-form
           id="test"
           action="https://api.yatendra.tech/api/user"
@@ -184,6 +185,7 @@ import { ref } from "vue";
 import { object, string, number, date } from "yup";
 import { useVqList } from "@qnx/vuetify";
 import { useVqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
+//import FormComponent from "./components/FormComponent.md";
 
 const tab = ref(1);
 
