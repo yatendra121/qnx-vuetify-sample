@@ -9,6 +9,9 @@ import Markdown from "unplugin-vue-markdown/vite";
 import Pages from "vite-plugin-pages";
 import prism from "markdown-it-prism";
 import Inspect from "vite-plugin-inspect";
+import MarkdownItAnchor from "markdown-it-anchor";
+import MarkdownItPrism from "markdown-it-prism";
+import MarkdownItHighlightJS from "markdown-it-highlightjs";
 
 //import Components from "unplugin-vue-components/vite";
 
@@ -24,22 +27,28 @@ export default defineConfig({
       autoImport: true,
     }),
     Markdown({
-      headEnabled: true,
-      markdownItUses: [prism],
+      markdownItSetup(md) {
+        // for example
+        md.use(MarkdownItAnchor);
+        md.use(MarkdownItPrism);
+        md.use(MarkdownItHighlightJS);
+      },
+      // headEnabled: true,
+      //  markdownItUses: [prism],
     }),
     Pages({
       pagesDir: "pages",
       extensions: ["vue", "md"],
     }),
-    Inspect(),
+    // Inspect(),
   ],
-  // define: { "process.env": {} },
-  // resolve: {
-  //   alias: {
-  //     "@": fileURLToPath(new URL("./src", import.meta.url)),
-  //   },
-  //   extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
-  // },
+  define: { "process.env": {} },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+    extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue", ".md"],
+  },
   build: {
     sourcemap: true,
   },

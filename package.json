@@ -22,13 +22,17 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@mdit-vue/plugin-component": "^2.1.1",
     "@types/node": "^20.12.6",
     "@types/webfontloader": "^1.6.38",
+    "@unhead/vue": "^1.9.5",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
     "eslint": "^9.0.0",
     "eslint-plugin-vue": "^9.24.1",
     "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-highlightjs": "^4.0.1",
     "markdown-it-prism": "^2.3.0",
     "typescript": "^5.4.4",
     "unplugin-vue-markdown": "^0.26.0",

@@ -43,12 +43,18 @@ dependencies:
     version: 1.4.0
 
 devDependencies:
+  '@mdit-vue/plugin-component':
+    specifier: ^2.1.1
+    version: 2.1.1
   '@types/node':
     specifier: ^20.12.6
     version: 20.12.6
   '@types/webfontloader':
     specifier: ^1.6.38
     version: 1.6.38
+  '@unhead/vue':
+    specifier: ^1.9.5
+    version: 1.9.5(vue@3.4.21)
   '@vitejs/plugin-vue':
     specifier: ^5.0.4
     version: 5.0.4(vite@5.2.8)(vue@3.4.21)
@@ -64,6 +70,12 @@ devDependencies:
   markdown-it:
     specifier: ^14.1.0
     version: 14.1.0
+  markdown-it-anchor:
+    specifier: ^8.6.7
+    version: 8.6.7(@types/markdown-it@14.0.0)(markdown-it@14.1.0)
+  markdown-it-highlightjs:
+    specifier: ^4.0.1
+    version: 4.0.1
   markdown-it-prism:
     specifier: ^2.3.0
     version: 2.3.0
@@ -371,8 +383,8 @@ packages:
     resolution: {integrity: sha512-43MtGpd585SNzHZPcYowu/84Vz2a2g31TvPMTm9uTiCSWzaheQySUcSyUH/46fPnuPQWof2yd0pGBtzee/IQWw==}
     dev: false
 
-  /@mdit-vue/plugin-component@2.1.0:
-    resolution: {integrity: sha512-C3y7/hB90WcCpuxw+Z7uWmF3+NJpjv89PI8EVdxFJMFUfdX9JGBAkW34UA9+JdQSx7ARVeXgcb06zkD5z37cbw==}
+  /@mdit-vue/plugin-component@2.1.1:
+    resolution: {integrity: sha512-paTg5zYtJbLGMTQ6W4YNyyBKBiGOvm9Mhl/R9eanKgTMsFErksXFuygut8vgd9ueSPuaTk/eRQfHQEXfv41MTg==}
     dependencies:
       '@types/markdown-it': 14.0.0
       markdown-it: 14.1.0
@@ -757,6 +769,38 @@ packages:
     dependencies:
       '@typescript-eslint/types': 7.6.0
       eslint-visitor-keys: 3.4.3
+    dev: true
+
+  /@unhead/dom@1.9.5:
+    resolution: {integrity: sha512-t+JvAFX+Qkx+IEZFBQV5rZoj/6SKHd3tqXqxpsER588DWxU0J6dzvAVJrof/vRTMjJ1lM6B8SxKhZppSZ7H2iQ==}
+    dependencies:
+      '@unhead/schema': 1.9.5
+      '@unhead/shared': 1.9.5
+    dev: true
+
+  /@unhead/schema@1.9.5:
+    resolution: {integrity: sha512-n0upGPplBn5Y/4PIqKp7/tzOhz7USos5lFjf8UKvMNoOIitEa+avP2u7gRQ9yOhHmOAH9AXDeX7mhSvhO+Tqxw==}
+    dependencies:
+      hookable: 5.5.3
+      zhead: 2.2.4
+    dev: true
+
+  /@unhead/shared@1.9.5:
+    resolution: {integrity: sha512-WN2T8th1wYn4A1bb6o8Z59wNVMPkD6YdNQIlmSbEP9zuSYyVEh3BIxqSdxWM/xl8atN8fNwVW06knaF51VmKXA==}
+    dependencies:
+      '@unhead/schema': 1.9.5
+    dev: true
+
+  /@unhead/vue@1.9.5(vue@3.4.21):
+    resolution: {integrity: sha512-L3yDB6Mwm92gJNPqZApMwfGluS0agR0HIizkXCKKz3WkZ+ef/negMwTNGpTtd+uqh/+hSyG73Bl4yySuPsD4nA==}
+    peerDependencies:
+      vue: '>=2.7 || >=3'
+    dependencies:
+      '@unhead/schema': 1.9.5
+      '@unhead/shared': 1.9.5
+      hookable: 5.5.3
+      unhead: 1.9.5
+      vue: 3.4.21(typescript@5.4.4)
     dev: true
 
   /@vitejs/plugin-vue@5.0.4(vite@5.2.8)(vue@3.4.21):
@@ -1666,6 +1710,15 @@ packages:
     hasBin: true
     dev: true
 
+  /highlight.js@11.9.0:
+    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
+    engines: {node: '>=12.0.0'}
+    dev: true
+
+  /hookable@5.5.3:
+    resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
+    dev: true
+
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
@@ -1962,6 +2015,22 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /markdown-it-anchor@8.6.7(@types/markdown-it@14.0.0)(markdown-it@14.1.0):
+    resolution: {integrity: sha512-FlCHFwNnutLgVTflOYHPW2pPcl2AACqVzExlkGQNsi4CJgqOHN7YTgDd4LuhgN1BFO3TS0vLAruV1Td6dwWPJA==}
+    peerDependencies:
+      '@types/markdown-it': '*'
+      markdown-it: '*'
+    dependencies:
+      '@types/markdown-it': 14.0.0
+      markdown-it: 14.1.0
+    dev: true
+
+  /markdown-it-highlightjs@4.0.1:
+    resolution: {integrity: sha512-EPXwFEN6P5nqR3G4KjT20r20xbGYKMMA/360hhSYFmeoGXTE6hsLtJAiB/8ID8slVH4CWHHEL7GX0YenyIstVQ==}
+    dependencies:
+      highlight.js: 11.9.0
+    dev: true
 
   /markdown-it-prism@2.3.0:
     resolution: {integrity: sha512-ePtHY80gZyeje4bn3R3SL0jpd1C9HFaYffJW2Ma0YD+tspqa2v9TuVwUyFwboFu4jnFNcO8oPQROgbcYJbmBvw==}
@@ -2508,6 +2577,15 @@ packages:
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  /unhead@1.9.5:
+    resolution: {integrity: sha512-eBKDPO9IMltRze9mHNYIVdosjlqoNFbwJRbykGT/7z/S5uYR2QRCXmIhEsJT4crffy6KQyB5ywLPqjRPx0s57A==}
+    dependencies:
+      '@unhead/dom': 1.9.5
+      '@unhead/schema': 1.9.5
+      '@unhead/shared': 1.9.5
+      hookable: 5.5.3
+    dev: true
+
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -2518,7 +2596,7 @@ packages:
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0-0 || ^4.0.0-0 || ^5.0.0-0
     dependencies:
-      '@mdit-vue/plugin-component': 2.1.0
+      '@mdit-vue/plugin-component': 2.1.1
       '@mdit-vue/plugin-frontmatter': 2.1.0
       '@mdit-vue/types': 2.1.0
       '@rollup/pluginutils': 5.1.0
@@ -2843,3 +2921,7 @@ packages:
       toposort: 2.0.2
       type-fest: 2.19.0
     dev: false
+
+  /zhead@2.2.4:
+    resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
+    dev: true
