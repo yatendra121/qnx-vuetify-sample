@@ -27,6 +27,11 @@ export default defineConfig({
       autoImport: true,
     }),
     Markdown({
+      // markdownItOptions: {
+      //   html: true,
+      //   linkify: true,
+      //   typographer: true,
+      // },
       markdownItSetup(md) {
         // for example
         md.use(MarkdownItAnchor);
@@ -34,12 +39,12 @@ export default defineConfig({
         md.use(MarkdownItHighlightJS);
       },
       // headEnabled: true,
-      //  markdownItUses: [prism],
+      // markdownItUses: [prism],
     }),
-    Pages({
-      pagesDir: "pages",
-      extensions: ["vue", "md"],
-    }),
+    // Pages({
+    //   pagesDir: "pages",
+    //   extensions: ["vue", "md"],
+    // }),
     // Inspect(),
   ],
   define: { "process.env": {} },

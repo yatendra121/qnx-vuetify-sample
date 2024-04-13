@@ -8,7 +8,9 @@
   <v-window v-model="tab">
     <v-window-item :value="1">
       <v-container fluid>
-        <FormComponent />
+        <v-card>
+          <FormComponent />
+        </v-card>
         <vq-form
           id="test"
           action="https://api.yatendra.tech/api/user"
