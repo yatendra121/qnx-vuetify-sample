@@ -8,9 +8,6 @@
   <v-window v-model="tab">
     <v-window-item :value="1">
       <v-container fluid>
-        <v-card>
-          <FormComponent />
-        </v-card>
         <vq-form
           id="test"
           action="https://api.yatendra.tech/api/user"
@@ -69,6 +66,10 @@
             </v-row>
           </v-container>
         </vq-form>
+
+        <v-card varient="flat" :elevation="0">
+          <FormComponent />
+        </v-card>
       </v-container>
     </v-window-item>
 
@@ -187,7 +188,7 @@ import { ref } from "vue";
 import { object, string, number, date } from "yup";
 import { useVqList } from "@qnx/vuetify";
 import { useVqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
-import FormComponent from "./components/FormComponent.md";
+import FormComponent from "./components/FormComponent";
 
 const tab = ref(1);
 

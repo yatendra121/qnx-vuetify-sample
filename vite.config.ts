@@ -27,20 +27,28 @@ export default defineConfig({
       autoImport: true,
     }),
     Markdown({
-      // markdownItOptions: {
-      //   html: true,
-      //   linkify: true,
-      //   typographer: true,
-      // },
-      markdownItSetup(md) {
-        // for example
-        md.use(MarkdownItAnchor);
-        md.use(MarkdownItPrism);
-        md.use(MarkdownItHighlightJS);
-      },
-      // headEnabled: true,
-      // markdownItUses: [prism],
+      headEnabled: true,
+      markdownItUses: [prism],
     }),
+    Pages({
+      extensions: ["vue", "md"],
+    }),
+    Inspect(),
+    // Markdown({
+    //   markdownItOptions: {
+    //     html: true,
+    //     linkify: true,
+    //     typographer: true,
+    //   },
+    //   // markdownItSetup(md) {
+    //   //   // for example
+    //   //   md.use(MarkdownItAnchor);
+    //   //   md.use(MarkdownItPrism);
+    //   //   md.use(MarkdownItHighlightJS);
+    //   // },
+    //   // headEnabled: true,
+    //   //markdownItUses: [prism],
+    // }),
     // Pages({
     //   pagesDir: "pages",
     //   extensions: ["vue", "md"],
