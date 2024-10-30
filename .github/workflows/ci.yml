@@ -13,30 +13,25 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node: [18.x, 20.x, 22.x]
-      fail-fast: false
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Setup repo
+        uses: actions/checkout@v4
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Deno
+        # uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@latest # v1.1.2
         with:
-          version: latest
+          deno-version: v2.x
 
-      - name: Set node version to ${{ matrix.node }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-          cache: pnpm
+      # Uncomment this step to verify the use of 'deno fmt' on each commit.
+      # - name: Verify formatting
+      #   run: deno fmt --check
 
-      - name: Install
-        run: pnpm install --no-frozen-lockfile
+      # - name: Run tests
+      #   run: deno test -A
 
       - name: Test App Build
-        run: pnpm build
+        run: deno run build
 
       - name: Test Docs Build
-        run: pnpm docs:build
+        run: deno run docs:build
