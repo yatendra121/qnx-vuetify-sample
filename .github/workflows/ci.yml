@@ -19,9 +19,9 @@ jobs:
 
       - name: Setup Deno
         # uses: denoland/setup-deno@v1
-        uses: denoland/setup-deno@latest # v1.1.2
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: v2.x
+          deno-version: "latest"
 
       # Uncomment this step to verify the use of 'deno fmt' on each commit.
       # - name: Verify formatting
