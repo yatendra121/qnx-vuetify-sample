@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
-    "@qnx/composables": "^0.6.8",
-    "@qnx/vuetify": "^0.6.12",
+    "@qnx/composables": "latest",
+    "@qnx/vuetify": "latest",
     "axios": "^1.6.8",
     "pinia": "^2.1.7",
     "roboto-fontface": "^0.10.0",
@@ -41,9 +41,13 @@
     "typescript": "^5.4.4",
     "unocss": "latest",
     "vite": "^5.2.8",
-    "vite-plugin-inspect": "^0.8.3",
     "vite-plugin-vuetify": "^2.0.3",
     "vitepress": "latest",
     "vue-tsc": "^2.0.11"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.23.1"
+    }
   }
 }
