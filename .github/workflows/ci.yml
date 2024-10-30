@@ -30,6 +30,9 @@ jobs:
       # - name: Run tests
       #   run: deno test -A
 
+      - name: Install
+        run: deno install
+
       - name: Test App Build
         run: deno run build
 
