@@ -5,7 +5,10 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
@@ -22,20 +25,25 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "latest",
+    "@unocss/preset-icons": "latest",
+    "@unocss/preset-uno": "latest",
     "@types/node": "^20.12.6",
     "@types/webfontloader": "^1.6.38",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
+    "@vueuse/core": "latest",
+    "date-fns": "latest",
     "eslint": "^9.0.0",
     "eslint-plugin-vue": "^9.24.1",
-    "markdown-it": "^14.1.0",
-    "markdown-it-prism": "^2.3.0",
+    "gray-matter": "latest",
+    "markdown-it": "latest",
     "typescript": "^5.4.4",
-    "unplugin-vue-markdown": "^0.26.0",
+    "unocss": "latest",
     "vite": "^5.2.8",
     "vite-plugin-inspect": "^0.8.3",
-    "vite-plugin-pages": "^0.32.1",
     "vite-plugin-vuetify": "^2.0.3",
+    "vitepress": "latest",
     "vue-tsc": "^2.0.11"
   }
 }
