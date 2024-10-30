@@ -36,7 +36,7 @@ Data components are used to display and manipulate data within your application.
 - **VqTableFilter** - A filtering component to easily refine table results.
 - **VqListLoadMoreBtn** - A "Load More" button for incremental list loading.
 
-[Learn more about Data Components](/components/data)
+[Learn more about Data Components](/components/other)
 
 ---
 

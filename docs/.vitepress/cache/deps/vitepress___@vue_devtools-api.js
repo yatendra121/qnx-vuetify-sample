@@ -1,4 +1,4 @@
-// node_modules/.deno/@vue+devtools-shared@7.5.4/node_modules/@vue/devtools-shared/dist/index.js
+// node_modules/.pnpm/@vue+devtools-shared@7.5.6/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -258,7 +258,7 @@ function isUrlString(str) {
 }
 var deepClone = (0, import_rfdc.default)({ circles: true });
 
-// node_modules/.deno/perfect-debounce@1.0.0/node_modules/perfect-debounce/dist/index.mjs
+// node_modules/.pnpm/perfect-debounce@1.0.0/node_modules/perfect-debounce/dist/index.mjs
 var DEBOUNCE_DEFAULTS = {
   trailing: true
 };
@@ -315,7 +315,7 @@ async function _applyPromised(fn, _this, args) {
   return await fn.apply(_this, args);
 }
 
-// node_modules/.deno/hookable@5.5.3/node_modules/hookable/dist/index.mjs
+// node_modules/.pnpm/hookable@5.5.3/node_modules/hookable/dist/index.mjs
 function flatHooks(configHooks, hooks2 = {}, parentName) {
   for (const key in configHooks) {
     const subHook = configHooks[key];
@@ -520,11 +520,11 @@ function createHooks() {
   return new Hookable();
 }
 
-// node_modules/.deno/birpc@0.2.19/node_modules/birpc/dist/index.mjs
+// node_modules/.pnpm/birpc@0.2.19/node_modules/birpc/dist/index.mjs
 var { clearTimeout: clearTimeout2, setTimeout: setTimeout2 } = globalThis;
 var random = Math.random.bind(Math);
 
-// node_modules/.deno/@vue+devtools-kit@7.5.4/node_modules/@vue/devtools-kit/dist/index.js
+// node_modules/.pnpm/@vue+devtools-kit@7.5.6/node_modules/@vue/devtools-kit/dist/index.js
 var __create2 = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
@@ -2696,6 +2696,7 @@ var devtoolsTimelineLayers = new Proxy(target.__VUE_DEVTOOLS_KIT_TIMELINE_LAYERS
   }
 });
 function addTimelineLayer(options, descriptor) {
+  devtoolsState.timelineLayersState[descriptor.id] = false;
   devtoolsTimelineLayers.push({
     ...options,
     descriptorId: descriptor.id,
@@ -2784,9 +2785,9 @@ function createDevToolsCtxHooks() {
   hooks2.hook("addInspector", ({ inspector, plugin }) => {
     addInspector(inspector, plugin.descriptor);
   });
-  hooks2.hook("sendInspectorTree", async ({ inspectorId, plugin }) => {
+  const debounceSendInspectorTree = debounce(async ({ inspectorId, plugin }) => {
     var _a25;
-    if (!inspectorId || !((_a25 = plugin == null ? void 0 : plugin.descriptor) == null ? void 0 : _a25.app))
+    if (!inspectorId || !((_a25 = plugin == null ? void 0 : plugin.descriptor) == null ? void 0 : _a25.app) || devtoolsState.highPerfModeEnabled)
       return;
     const inspector = getInspector(inspectorId, plugin.descriptor.app);
     const _payload = {
@@ -2815,10 +2816,11 @@ function createDevToolsCtxHooks() {
       "sendInspectorTreeToClient"
       /* SEND_INSPECTOR_TREE_TO_CLIENT */
     );
-  });
-  hooks2.hook("sendInspectorState", async ({ inspectorId, plugin }) => {
+  }, 120);
+  hooks2.hook("sendInspectorTree", debounceSendInspectorTree);
+  const debounceSendInspectorState = debounce(async ({ inspectorId, plugin }) => {
     var _a25;
-    if (!inspectorId || !((_a25 = plugin == null ? void 0 : plugin.descriptor) == null ? void 0 : _a25.app))
+    if (!inspectorId || !((_a25 = plugin == null ? void 0 : plugin.descriptor) == null ? void 0 : _a25.app) || devtoolsState.highPerfModeEnabled)
       return;
     const inspector = getInspector(inspectorId, plugin.descriptor.app);
     const _payload = {
@@ -2853,7 +2855,8 @@ function createDevToolsCtxHooks() {
       "sendInspectorStateToClient"
       /* SEND_INSPECTOR_STATE_TO_CLIENT */
     );
-  });
+  }, 120);
+  hooks2.hook("sendInspectorState", debounceSendInspectorState);
   hooks2.hook("customInspectorSelectNode", ({ inspectorId, nodeId, plugin }) => {
     const inspector = getInspector(inspectorId, plugin.descriptor.app);
     if (!inspector)
@@ -2864,6 +2867,10 @@ function createDevToolsCtxHooks() {
     addTimelineLayer(options, plugin.descriptor);
   });
   hooks2.hook("timelineEventAdded", ({ options, plugin }) => {
+    var _a25;
+    const internalLayerIds = ["performance", "component-event", "keyboard", "mouse"];
+    if (devtoolsState.highPerfModeEnabled || !((_a25 = devtoolsState.timelineLayersState) == null ? void 0 : _a25[plugin.descriptor.id]) && !internalLayerIds.includes(options.layerId))
+      return;
     hooks2.callHookWith(
       async (callbacks) => {
         await Promise.all(callbacks.map((cb) => cb(options)));
@@ -3450,6 +3457,8 @@ function normalizeRouterInfo(appRecord, activeAppRecord2) {
     if (((_a25 = activeAppRecord2.value) == null ? void 0 : _a25.app) !== appRecord.app)
       return;
     init();
+    if (devtoolsState.highPerfModeEnabled)
+      return;
     devtoolsContext.hooks.callHook("routerInfoUpdated", { state: target[ROUTER_INFO_KEY] });
   }, 200));
 }
