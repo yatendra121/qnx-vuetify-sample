@@ -17,7 +17,7 @@ import axios from "axios";
 import type { App } from "vue";
 
 const config = {
-  baseURL: "https://api.yatendra.tech/api/",
+  baseURL: "https://api.yatendra.online/api/",
 };
 
 const _axios = axios.create(config);
