@@ -11,7 +11,7 @@
         <!-- <FormComponent /> -->
         <vq-form
           id="test"
-          action="https://api.yatendra.tech/api/user"
+          action="https://api.yatendra.online/api/user"
           :validation-schema="userSchema"
           @submited-success="handleResponse"
           @submited-client-error="handleResponse"
@@ -97,7 +97,11 @@
       <v-container>
         <v-card>
           <v-responsive>
-            <VqDataTable :headers="headers" :id="datatableId" action="user">
+            <VqDataTable
+              :headers="headers"
+              :id="datatableId"
+              action="https://api.yatendra.online/api/user"
+            >
               <template #item="{ item, index }">
                 <tr>
                   <VqSerialNo :index="index + 1" />
@@ -139,7 +143,12 @@
       <v-container>
         <v-card>
           <v-responsive>
-            <VqList density="compact" action="user" :id="id" :page-size="10">
+            <VqList
+              density="compact"
+              action="https://api.yatendra.online/api/user"
+              :id="id"
+              :page-size="10"
+            >
               <template #default="{ items }">
                 <v-table>
                   <thead>

@@ -10,7 +10,7 @@ import vuetify from "./vuetify";
 import pinia from "../store";
 import router from "../router";
 import vqVuetify from "@qnx/vuetify";
-import { setAxiosInstance } from "@qnx/composables/axios";
+import { setAxiosInstance, AxiosPlugin } from "@qnx/composables/axios";
 import axios from "axios";
 
 // Types
@@ -22,8 +22,10 @@ const config = {
 
 const _axios = axios.create(config);
 
+AxiosPlugin.setInstance(_axios);
+
 export function registerPlugins(app: App) {
   loadFonts();
-  setAxiosInstance(_axios);
+
   app.use(vuetify).use(router).use(pinia).use(vqVuetify);
 }
