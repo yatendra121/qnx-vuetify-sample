@@ -12,19 +12,28 @@ export default defineConfig({
       { text: "Components", link: "/components/" },
       { text: "Composables", link: "/composables/" },
     ],
-    sidebar: {
-      "/guide/": [
-        { text: "Introduction", link: "/guide/" },
-        { text: "Installation", link: "/guide/installation" },
-        { text: "Usage", link: "/guide/usage" },
-      ],
-      "/components/": [
-        { text: "Form Components", link: "/components/form" },
-        { text: "Other Components", link: "/components/other" },
-        { text: "Integration Components", link: "/components/integration" },
-      ],
-      "/composables/": [{ text: "Form Composables", link: "/composables/form-composables" }],
-    },
+    sidebar: [
+      {
+        text: "Guide",
+        items: [
+          { text: "Introduction", link: "/guide/" },
+          { text: "Installation", link: "/guide/installation" },
+          { text: "Usage", link: "/guide/usage" },
+        ],
+      },
+      {
+        text: "Components",
+        items: [
+          { text: "Form Components", link: "/components/form" },
+          { text: "Other Components", link: "/components/other" },
+          { text: "Integration Components", link: "/components/integration" },
+        ],
+      },
+      {
+        text: "Composables",
+        items: [{ text: "Form Composables", link: "/composables" }],
+      },
+    ],
   },
 });
 
@@ -125,3 +134,28 @@ export default defineConfig({
 //     },
 //   ];
 // }
+
+function test() {
+  return [
+    {
+      text: "Guild",
+      items: [
+        { text: "Introduction", link: "/guide/" },
+        { text: "Installation", link: "/guide/installation" },
+        { text: "Usage", link: "/guide/usage" },
+      ],
+    },
+    {
+      text: "Components",
+      items: [
+        { text: "Form Components", link: "/components/form-components" },
+        { text: "Other Components", link: "/components/other-components" },
+        { text: "Integration Components", link: "/components/integration-components" },
+      ],
+    },
+    {
+      text: "Composables",
+      items: [{ text: "Form Composables", link: "/composables/form-composables" }],
+    },
+  ];
+}
