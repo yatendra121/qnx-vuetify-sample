@@ -1,88 +1,126 @@
 # Components
 
-`@qnx/vuetify` provides a collection of Vue components designed to simplify form handling, data management, and data presentation within Vuetify applications. These components are organized into categories based on their primary function: Form Components, Data Components, and Integration Components.
-
-Explore each section below for detailed descriptions, usage examples, and customization options.
+`@qnx/vuetify` provides a collection of Vue 3 components built on Vuetify 4. They cover form handling, server-driven data tables, infinite-scroll lists, and notifications — all with built-in validation, API integration, and state management.
 
 ---
 
 ## Form Components
 
-Form components simplify form creation and management by handling input fields, validation, and form submission. Each component is styled to fit seamlessly into Vuetify's design system.
+All input components integrate with `vee-validate` and must be nested inside `VqForm` or `useVqForm`.
 
-- **VqForm** - The core form component, managing validation, data submission, and internal states.
-- **VqTextField** - A basic text input field with integrated validation.
-- **VqTextarea** - A multi-line text input for larger text entries.
-- **VqAutocomplete** - An autocomplete input field to assist users in selecting from a list of options.
-- **VqFileInput** - A file upload component, allowing users to attach files.
-- **VqCheckbox** - A checkbox input for boolean values.
-- **VqDatePicker** - A date picker component for selecting dates.
-- **VqTimePicker** - A time picker component for time selection.
-- **VqColorPicker** - A color picker component for color selection.
-- **VqOtpInput** - An OTP (One-Time Password) input field.
-- **VqSubmitBtn** - A submit button optimized for form submission.
-
-[Learn more about Form Components](/components/form)
+| Component | Description | Link |
+|-----------|-------------|------|
+| `VqForm` | Core form wrapper — validation, API submission, error mapping | [→ Docs](/components/form/vq-form) |
+| `useVqForm` | Composable version of VqForm with `resetForm` access | [→ Docs](/components/form/use-vq-form) |
+| `VqTextField` | Validated single-line text input | [→ Docs](/components/form/vq-text-field) |
+| `VqTextarea` | Validated multi-line text area | [→ Docs](/components/form/vq-textarea) |
+| `VqCheckbox` | Validated checkbox (boolean value) | [→ Docs](/components/form/vq-checkbox) |
+| `VqAutocomplete` | Validated autocomplete with optional API item loading | [→ Docs](/components/form/vq-autocomplete) |
+| `VqDatePicker` | Validated date picker (dialog or menu) | [→ Docs](/components/form/vq-date-picker) |
+| `VqTimePicker` | Validated time picker (dialog or menu) | [→ Docs](/components/form/vq-time-picker) |
+| `VqColorPicker` | Validated color picker (dialog or menu) | [→ Docs](/components/form/vq-color-picker) |
+| `VqOtpInput` | Validated OTP input | [→ Docs](/components/form/vq-otp-input) |
+| `VqFileInput` | Validated single-file input | [→ Docs](/components/form/vq-file-input) |
+| `VqFileUpload` | Validated file upload (Vuetify Labs) | [→ Docs](/components/form/vq-file-upload) |
+| `VqSubmitBtn` | Submit button with auto loading/disabled state | [→ Docs](/components/form/vq-submit-btn) |
 
 ---
 
 ## Data Components
 
-Data components are used to display and manipulate data within your application. These components integrate seamlessly with Vuetify’s data presentation styles, enabling efficient and dynamic data handling.
+Server-driven components for tables, lists, and filters with automatic pagination, sorting, and reload on filter change.
 
-- **VqDataTable** - A versatile data table for displaying tabular data.
-- **VqSerialNo** - Displays serial numbers in lists or tables.
-- **VqList** - A dynamic list component for displaying items.
-- **VqTableFilter** - A filtering component to easily refine table results.
-- **VqListLoadMoreBtn** - A "Load More" button for incremental list loading.
-
-[Learn more about Data Components](/components/other)
+| Component | Description | Link |
+|-----------|-------------|------|
+| `VqDataTable` | Server-side paginated data table | [→ Docs](/components/data/vq-data-table) |
+| `useVqDataTable<T>` | Type-safe wrapper for `VqDataTable` | [→ Docs](/components/data/use-vq-data-table) |
+| `collectVqHeaders` | Prepends a `#` serial column to table headers | [→ Docs](/components/data/collect-vq-headers) |
+| `VqSerialNo` | Serial number `<td>` cell for table rows | [→ Docs](/components/data/vq-serial-no) |
+| `VqDatatableItemAction` | Row action button with confirmation dialog | [→ Docs](/components/data/vq-datatable-item-action) |
+| `VqList` | Infinite-scroll list with filter integration | [→ Docs](/components/data/vq-list) |
+| `useVqList<T>` | Type-safe wrapper for `VqList` | [→ Docs](/components/data/use-vq-list) |
+| `VqTableFilter` | Filter form paired to a table or list by `id` | [→ Docs](/components/data/vq-table-filter) |
+| `VqListLoadMoreBtn` | "Load More" button for `VqList` | [→ Docs](/components/data/vq-list-load-more-btn) |
+| `MessageQueue` | Root snackbar queue — place once in `App.vue` | [→ Docs](/components/data/message-queue) |
 
 ---
 
 ## Integration Components
 
-Integration components provide additional functionality for specialized applications, allowing you to embed text editors or handle specific input types easily.
+Exported from `@qnx/vuetify/integrations` to keep the core bundle lean.
 
-- **VqTextEditor** - A rich text editor component for creating or editing formatted text.
-
-[Learn more about Integration Components](/components/integration)
+| Component | Description | Link |
+|-----------|-------------|------|
+| `VqTextEditor` | TinyMCE rich text editor with form validation | [→ Docs](/components/integration/vq-text-editor) |
 
 ---
 
-## How to Use Components
+## Quick Start
 
-To use any component, first import it from `@qnx/vuetify`. Here’s a quick example using `VqForm` and `VqTextField` to create a simple form:
+### Basic Form
 
 ```vue
 <script setup>
-import { VqForm, VqTextField } from "@qnx/vuetify";
+import { VqForm, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
 import { object, string } from "yup";
 
-let validationSchema = object({
-  name: string().required(),
-  email: string().required().email(),
+const schema = object({
+  name: string().required("Name is required"),
+  email: string().required().email("Invalid email"),
 });
-
-const initialValues = { name: "User", email: "user@example.com" };
-const onSuccess = (res) => {
-  console.log("Form submitted:", res);
-};
 </script>
 
 <template>
   <VqForm
-    action="user/create"
+    id="create-user"
+    action="users/create"
     method="POST"
-    :validation-schema="validationSchema"
-    :initial-values="initialValues"
-    @submited-success="onSuccess"
+    :validation-schema="schema"
+    @submited-success="(res) => console.log('Done:', res)"
   >
-    <VqTextField name="name" label="Name" placeholder="Enter your name" />
-    <VqTextField name="email" label="Email" placeholder="Enter your email" />
-    <button type="submit">Submit</button>
+    <VqTextField name="name" label="Name" />
+    <VqTextField name="email" label="Email" />
+    <VqSubmitBtn>Create User</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-This setup provides an intuitive navigation structure, allowing users to easily browse through components and access specific details for each.
+### Data Table with Filters
+
+```vue
+<script setup>
+import { VqDataTable, VqTableFilter, VqTextField, collectVqHeaders } from "@qnx/vuetify";
+
+const headers = collectVqHeaders([
+  { title: "Name", key: "name" },
+  { title: "Email", key: "email" },
+]);
+</script>
+
+<template>
+  <VqTableFilter id="users">
+    <VqTextField name="search" label="Search" />
+  </VqTableFilter>
+
+  <VqDataTable id="users" action="users/list" :headers="headers">
+    <template #item="{ item, index }">
+      <tr>
+        <td>{{ index }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.email }}</td>
+      </tr>
+    </template>
+  </VqDataTable>
+</template>
+```
+
+### Infinite Scroll List
+
+```vue
+<template>
+  <VqList id="posts" action="posts/list" v-slot="{ items }">
+    <v-list-item v-for="post in items" :key="post.id">{{ post.title }}</v-list-item>
+    <VqListLoadMoreBtn />
+  </VqList>
+</template>
+```
