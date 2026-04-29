@@ -1,0 +1,37 @@
+{
+  "name": "@qnx/vuetify-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MCP server exposing @qnx/vuetify documentation to AI assistants",
+  "license": "MIT",
+  "author": "Yatendra Kushwaha <yatendra121kushwaha@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yatendra121/vq-vuetify.git"
+  },
+  "keywords": ["mcp", "vuetify", "vue", "ai", "documentation"],
+  "bin": {
+    "vq-vuetify-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "docs"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "copy-docs": "node scripts/copy-docs.mjs",
+    "build": "pnpm copy-docs && tsc",
+    "start": "node dist/index.js",
+    "inspect": "npx @modelcontextprotocol/inspector node --import tsx/esm src/index.ts",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
