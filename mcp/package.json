@@ -22,6 +22,7 @@
     "copy-docs": "node scripts/copy-docs.mjs",
     "build": "pnpm copy-docs && tsc",
     "start": "node dist/index.js",
+    "validate-docs": "node scripts/validate-docs.mjs",
     "inspect": "npx @modelcontextprotocol/inspector node --import tsx/esm src/index.ts",
     "prepublishOnly": "pnpm build"
   },
