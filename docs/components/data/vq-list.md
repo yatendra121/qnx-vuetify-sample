@@ -1,6 +1,20 @@
+<script setup>
+import ListExample from '../../../src/components/examples/data/ListExample.vue'
+</script>
+
 # VqList
 
 An infinite-scroll list component that fetches paginated data from an API and appends items as the user loads more. Integrates with `VqTableFilter` for filtering.
+
+## Live Demo
+
+<VDemo>
+  <ListExample />
+</VDemo>
+
+::: details View source code
+<<< ../../../src/components/examples/data/ListExample.vue
+:::
 
 ## Props
 

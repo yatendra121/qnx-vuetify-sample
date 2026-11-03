@@ -10,22 +10,15 @@ import vuetify from "./vuetify";
 import pinia from "../store";
 import router from "../router";
 import vqVuetify from "@qnx/vuetify";
-import { setAxiosInstance, AxiosPlugin } from "@qnx/composables/axios";
-import axios from "axios";
+import vqVuetifyIntegrations from "@qnx/vuetify/integrations";
+import "./axios";
+import "./tinymce";
 
 // Types
 import type { App } from "vue";
 
-const config = {
-  baseURL: "https://api.yatendra.online/api/",
-};
-
-const _axios = axios.create(config);
-
-AxiosPlugin.setInstance(_axios);
-
 export function registerPlugins(app: App) {
   loadFonts();
 
-  app.use(vuetify).use(router).use(pinia).use(vqVuetify);
+  app.use(vuetify).use(router).use(pinia).use(vqVuetify).use(vqVuetifyIntegrations);
 }

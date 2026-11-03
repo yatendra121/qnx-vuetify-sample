@@ -1,6 +1,20 @@
+<script setup>
+import DataTableExample from '../../../src/components/examples/data/DataTableExample.vue'
+</script>
+
 # VqDataTable
 
 A server-side paginated data table with automatic sorting, filtering, and loading state. Wraps Vuetify's `VDataTableServer`.
+
+## Live Demo
+
+<VDemo>
+  <DataTableExample />
+</VDemo>
+
+::: details View source code
+<<< ../../../src/components/examples/data/DataTableExample.vue
+:::
 
 ## Props
 

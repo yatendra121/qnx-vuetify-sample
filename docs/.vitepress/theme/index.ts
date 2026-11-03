@@ -3,7 +3,7 @@ import type { Theme } from 'vitepress'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
-import { VFileUpload } from 'vuetify/labs/VFileUpload'
+import { VFileUpload } from 'vuetify/components'
 import { createPinia } from 'pinia'
 import vqVuetify from '@qnx/vuetify'
 import { AxiosPlugin } from '@qnx/composables/axios'
@@ -19,6 +19,13 @@ const vuetify = createVuetify({
     VFileUpload,
   },
   directives,
+  defaults: {
+    VTextField: { variant: 'outlined' },
+    VTextarea: { variant: 'outlined' },
+    VAutocomplete: { variant: 'outlined' },
+    VSelect: { variant: 'outlined' },
+    VFileInput: { variant: 'outlined' },
+  },
   theme: {
     themes: {
       light: {

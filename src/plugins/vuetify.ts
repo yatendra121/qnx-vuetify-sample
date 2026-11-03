@@ -10,12 +10,20 @@ import 'vuetify/styles'
 
 // Composables
 import { createVuetify } from 'vuetify'
-import { VFileUpload } from 'vuetify/labs/VFileUpload'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
-  components: {
-    VFileUpload,
+  display: { mobileBreakpoint: 'md' },
+  defaults: {
+    VBtn: { class: 'text-none' },
+    VTextField: { variant: 'filled', density: 'comfortable', clearable: true },
+    VTextarea: { variant: 'filled', density: 'comfortable', clearable: true, rows: 3 },
+    VAutocomplete: { variant: 'filled', density: 'comfortable', clearable: true },
+    VFileInput: { variant: 'filled', density: 'comfortable' },
+    VSelect: { variant: 'filled', density: 'comfortable' },
+    VOtpInput: { variant: 'filled' },
+    VCard: { flat: true, border: true, rounded: 'lg' },
+    VDialog: { maxWidth: 480 },
   },
   theme: {
     themes: {

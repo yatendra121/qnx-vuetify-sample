@@ -1,6 +1,20 @@
+<script setup>
+import UseVqFormExample from '../../../src/components/examples/composable/UseVqFormExample.vue'
+</script>
+
 # useVqForm
 
 Composable version of `VqForm`. Returns a wrapper component and direct access to `resetForm` for programmatic form control.
+
+## Live Demo
+
+<VDemo>
+  <UseVqFormExample />
+</VDemo>
+
+::: details View source code
+<<< ../../../src/components/examples/composable/UseVqFormExample.vue
+:::
 
 ## Parameters
 
