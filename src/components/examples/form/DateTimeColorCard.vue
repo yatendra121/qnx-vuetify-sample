@@ -11,30 +11,24 @@
       <v-row>
         <v-col cols="12" md="4">
           <div class="text-caption text-medium-emphasis mb-1">vq-date-picker</div>
-          <!-- variant="filled" is the Vuetify 4 default for text-field trigger -->
+          <!-- Other attrs reach the picker, not the text field that opens it. -->
           <vq-date-picker
-            variant="outlined"
             label="Date"
             name="date"
-            prepend-inner-icon="mdi-calendar-outline"
           />
         </v-col>
         <v-col cols="12" md="4">
           <div class="text-caption text-medium-emphasis mb-1">vq-time-picker</div>
           <vq-time-picker
-            variant="outlined"
             label="Time"
             name="time"
-            prepend-inner-icon="mdi-clock-outline"
           />
         </v-col>
         <v-col cols="12" md="4">
           <div class="text-caption text-medium-emphasis mb-1">vq-color-picker</div>
           <vq-color-picker
-            variant="outlined"
             label="Color"
             name="color"
-            prepend-inner-icon="mdi-palette-outline"
           />
         </v-col>
       </v-row>

@@ -1,23 +1,26 @@
 # VqColorPicker
 
-A validated color selection input displayed inside a dialog or menu. Wraps Vuetify's `VColorPicker` inside a `VTextField` trigger.
+A validated color input: a read-only text field that opens Vuetify's `VColorPicker` in a menu or dialog.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| `label` | `string` | `""` | Label for the trigger text field |
-| `type` | `boolean` | `false` | `false` = VMenu, `true` = VDialog |
-| *(all VColorPicker props)* | | | All Vuetify `VColorPicker` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
+| `label` | `string` | `""` | Label of the text field. |
+| `type` | `boolean` | `false` | `false` opens a menu, `true` opens a dialog. Read once. |
 
-## Features
+Any other attribute goes to [`VColorPicker`](https://vuetifyjs.com/api/v-color-picker), **not** the text field.
 
-- Stores selected color as a string or object
-- Click the text field to open the color picker
-- Supports both menu (dropdown) and dialog (modal) modes
+## Events and slots
 
-## Basic Example
+There are no events of its own. Listeners and slots go to `VColorPicker`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+## Value
+
+A hex string such as `#FF0000`. `VColorPicker` returns values in the format it's given, so an object initial value such as `{ r, g, b }` stays an object, and the text field shows `[object Object]`. Use strings.
+
+## Example
 
 ```vue
 <script setup>
@@ -30,45 +33,17 @@ const schema = object({
 </script>
 
 <template>
-  <VqForm id="branding" action="settings/branding" method="PUT" :validation-schema="schema">
-    <VqColorPicker name="brandColor" label="Brand Color" />
+  <VqForm id="branding" action="branding" method="PUT" :validation-schema="schema">
+    <VqColorPicker name="brandColor" label="Brand color" />
     <VqSubmitBtn>Save</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Dialog Mode
+## Dialog without the canvas
 
 ```vue
-<VqColorPicker name="themeColor" label="Theme Color" :type="true" />
-```
-
-## Theme Settings Form
-
-```vue
-<script setup>
-import { VqForm, VqColorPicker, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
-
-const schema = object({
-  siteName: string().required(),
-  primaryColor: string().required("Primary color is required"),
-  secondaryColor: string().required("Secondary color is required"),
-});
-</script>
-
 <template>
-  <VqForm id="theme" action="settings/theme" method="PUT" :validation-schema="schema">
-    <VqTextField name="siteName" label="Site Name" />
-    <v-row>
-      <v-col cols="6">
-        <VqColorPicker name="primaryColor" label="Primary Color" />
-      </v-col>
-      <v-col cols="6">
-        <VqColorPicker name="secondaryColor" label="Secondary Color" />
-      </v-col>
-    </v-row>
-    <VqSubmitBtn>Save Theme</VqSubmitBtn>
-  </VqForm>
+  <VqColorPicker name="themeColor" label="Theme color" type hide-canvas />
 </template>
 ```

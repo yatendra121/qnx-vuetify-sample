@@ -1,110 +1,79 @@
 # VqTableFilter
 
-A filter form that connects to `VqDataTable` or `VqList` by a shared `id`. Any change to filter fields automatically triggers the paired table/list to reload with updated filter values.
+A filter form connected to a `VqDataTable` or `VqList` by a shared `id`. When a field changes, the table or list refetches from page 1 with the form's values in its query.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `id` | `string` | required | Must match the `id` of the paired `VqDataTable` or `VqList` |
+| `id` | `string` | required | The `id` of the table or list to filter. |
 
-## Features
+Any other attribute goes to vee-validate's [`Form`](https://vee-validate.logaretm.com/v4/api/form/), including `initial-values`.
 
-- Wraps `vee-validate`'s `Form` component
-- Stores current field values in `useFormFilterStore`
-- Automatically triggers reload of the paired component when values change
-- Works with any form field component in its default slot
+## Events and slots
 
-## Basic Example
+| Slot | Description |
+|------|-------------|
+| `default` | The filter fields, such as `VqTextField` or `VqAutocomplete`. |
+
+## Example
 
 ```vue
 <script setup>
-import { VqDataTable, VqTableFilter, VqTextField, collectVqHeaders } from "@qnx/vuetify";
+import { VqAutocomplete, VqDataTable, VqTableFilter, VqTextField } from "@qnx/vuetify";
 
-const headers = collectVqHeaders([
+const headers = [
   { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
-]);
+  { title: "Role", key: "role" },
+];
+
+const ignoreSubmit = () => {};
 </script>
 
 <template>
-  <!-- The id must match -->
-  <VqTableFilter id="users">
-    <VqTextField name="search" label="Search" />
+  <VqTableFilter id="users" @submit="ignoreSubmit">
+    <v-row>
+      <v-col cols="12" md="6">
+        <VqTextField name="search" label="Search" />
+      </v-col>
+      <v-col cols="12" md="6">
+        <VqAutocomplete name="role" label="Role" :items="['Admin', 'Editor']" />
+      </v-col>
+    </v-row>
   </VqTableFilter>
 
-  <VqDataTable id="users" action="users/list" :headers="headers">
-    <template #item="{ item, index }">
-      <tr>
-        <td>{{ index }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
-      </tr>
-    </template>
-  </VqDataTable>
+  <VqDataTable id="users" action="users" :headers="headers" />
 </template>
 ```
 
-## Multiple Filter Fields
+## Pressing Enter
 
-```vue
-<VqTableFilter id="users">
-  <v-row>
-    <v-col cols="12" md="4">
-      <VqTextField name="search" label="Search by name" />
-    </v-col>
-    <v-col cols="12" md="4">
-      <VqAutocomplete
-        name="role"
-        label="Filter by role"
-        :items="['Admin', 'Editor', 'Viewer']"
-      />
-    </v-col>
-    <v-col cols="12" md="4">
-      <VqAutocomplete
-        name="status"
-        label="Filter by status"
-        :items="['active', 'inactive', 'pending']"
-      />
-    </v-col>
-  </v-row>
-</VqTableFilter>
-```
+Without an `onSubmit`, vee-validate submits the form natively, so pressing Enter in a field **reloads the page**. Always pass a handler, even an empty one, as the example does.
 
-## Paired with VqList
+## Requests per keystroke
 
-`VqTableFilter` works the same way with `VqList`:
+Each keystroke in a text field triggers a request, and the previous one is cancelled. There's no debounce option in this version.
 
-```vue
-<VqTableFilter id="posts">
-  <VqTextField name="search" label="Search posts" />
-</VqTableFilter>
-
-<VqList id="posts" action="posts/list" v-slot="{ items }">
-  <v-list-item v-for="post in items" :key="post.id">{{ post.title }}</v-list-item>
-  <VqListLoadMoreBtn />
-</VqList>
-```
-
-## Programmatic Reset
-
-Use `useFormFilterRepository` to reset filters from outside the filter form:
+## Initial values
 
 ```vue
 <script setup>
-import { useFormFilterRepository } from "@qnx/vuetify";
+import { VqList, VqTableFilter, VqTextField } from "@qnx/vuetify";
 
-const { reload, reset } = useFormFilterRepository("users_filter");
+const ignoreSubmit = () => {};
 </script>
 
 <template>
-  <VqTableFilter id="users">
+  <VqTableFilter id="posts" :initial-values="{ search: 'vue' }" @submit="ignoreSubmit">
     <VqTextField name="search" label="Search" />
   </VqTableFilter>
 
-  <v-btn @click="reset" variant="outlined">Clear Filters</v-btn>
-  <v-btn @click="reload">Refresh</v-btn>
-
-  <VqDataTable id="users" action="users/list" :headers="headers" />
+  <VqList id="posts" action="posts">
+    <template #default="{ items }">
+      <v-list-item v-for="post in items" :key="post.id" :title="post.title" />
+    </template>
+  </VqList>
 </template>
 ```
+
+Render the filter before the list, or its initial values aren't in the first request. `VqDataTable` doesn't send them in its first request either way.

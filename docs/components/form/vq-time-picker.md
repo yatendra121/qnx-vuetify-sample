@@ -1,23 +1,26 @@
 # VqTimePicker
 
-A validated time selection input displayed inside a dialog or menu. Wraps Vuetify's `VTimePicker` inside a `VTextField` trigger.
+A validated time input: a read-only text field that opens Vuetify's `VTimePicker` in a menu or dialog.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| `label` | `string` | `""` | Label for the trigger text field |
-| `type` | `boolean` | `false` | `false` = VMenu, `true` = VDialog |
-| *(all VTimePicker props)* | | | All Vuetify `VTimePicker` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
+| `label` | `string` | `""` | Label of the text field. |
+| `type` | `boolean` | `false` | `false` opens a menu, `true` opens a dialog. Read once. |
 
-## Features
+Any other attribute goes to [`VTimePicker`](https://vuetifyjs.com/api/v-time-picker), **not** the text field. The picker defaults to `format="24hr"` and `title="Select Time"`, and you can override both.
 
-- Stores time as a 24-hour format string (e.g., `"14:30"`)
-- Click the text field to open the time picker
-- Supports both menu (dropdown) and dialog (modal) modes
+## Events and slots
 
-## Basic Example
+There are no events of its own. Listeners and slots go to `VTimePicker`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+## Value
+
+The string `VTimePicker` emits, such as `14:30`.
+
+## Example
 
 ```vue
 <script setup>
@@ -30,45 +33,17 @@ const schema = object({
 </script>
 
 <template>
-  <VqForm id="schedule" action="meetings/create" :validation-schema="schema">
-    <VqTimePicker name="meetingTime" label="Meeting Time" />
+  <VqForm id="schedule" action="meetings" :validation-schema="schema">
+    <VqTimePicker name="meetingTime" label="Meeting time" />
     <VqSubmitBtn>Schedule</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Dialog Mode
+## Dialog with a 12-hour clock
 
 ```vue
-<VqTimePicker name="alarmTime" label="Alarm Time" :type="true" />
-```
-
-## Date + Time Combined Form
-
-```vue
-<script setup>
-import { VqForm, VqDatePicker, VqTimePicker, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
-
-const schema = object({
-  title: string().required("Title is required"),
-  eventDate: string().required("Date is required"),
-  eventTime: string().required("Time is required"),
-});
-</script>
-
 <template>
-  <VqForm id="event" action="events/create" :validation-schema="schema">
-    <VqTextField name="title" label="Event Title" />
-    <v-row>
-      <v-col cols="6">
-        <VqDatePicker name="eventDate" label="Date" />
-      </v-col>
-      <v-col cols="6">
-        <VqTimePicker name="eventTime" label="Time" />
-      </v-col>
-    </v-row>
-    <VqSubmitBtn>Create Event</VqSubmitBtn>
-  </VqForm>
+  <VqTimePicker name="alarm" label="Alarm" type format="ampm" />
 </template>
 ```

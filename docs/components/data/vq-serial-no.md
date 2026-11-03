@@ -1,70 +1,59 @@
 # VqSerialNo
 
-A serial number cell for use inside `VqDataTable` item slots. Renders a `<td>` element with the row index.
+A table cell that shows a row number. It renders a `<td>` for use in an `item` slot of `VqDataTable`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `index` | `number` | required | Row number to display |
+| `index` | `number` | required | The number to show, exactly as given. |
 
-## Usage
+## Example
 
-Always pair with `collectVqHeaders` to ensure the `#` column header is present:
+The slot's `index` starts at `0` and restarts on each page, so add `1` to start counting from one. Pair it with [`collectVqHeaders`](/composables/collect-vq-headers) for the `#` header.
 
 ```vue
 <script setup>
 import { VqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
 
-const headers = collectVqHeaders([
-  { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
-]);
+const headers = collectVqHeaders([{ title: "Name", key: "name" }]);
 </script>
 
 <template>
-  <VqDataTable id="users" action="users/list" :headers="headers">
+  <VqDataTable id="users" action="users" :headers="headers">
     <template #item="{ item, index }">
       <tr>
-        <VqSerialNo :index="index" />
+        <VqSerialNo :index="index + 1" />
         <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
       </tr>
     </template>
   </VqDataTable>
 </template>
 ```
 
-## With Full Table
+## Numbering across pages
+
+To keep counting across pages, track the options the table reports:
 
 ```vue
 <script setup>
-import {
-  VqDataTable, VqSerialNo, VqDatatableItemAction, collectVqHeaders
-} from "@qnx/vuetify";
+import { ref } from "vue";
+import { VqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
 
-const headers = collectVqHeaders([
-  { title: "Name", key: "name" },
-  { title: "Department", key: "department" },
-  { title: "Actions", key: "actions", sortable: false },
-]);
+const headers = collectVqHeaders([{ title: "Name", key: "name" }]);
+const offset = ref(0);
+
+const onOptions = ({ page, itemsPerPage }) => {
+  offset.value = (page - 1) * itemsPerPage;
+};
 </script>
 
 <template>
-  <VqDataTable id="employees" action="employees/list" :headers="headers">
+  <VqDataTable id="users" action="users" :headers="headers" @update:options="onOptions">
     <template #item="{ item, index }">
       <tr>
-        <VqSerialNo :index="index" />
+        <VqSerialNo :index="offset + index + 1" />
         <td>{{ item.name }}</td>
-        <td>{{ item.department }}</td>
-        <td>
-          <VqDatatableItemAction
-            id="employees"
-            :item-id="String(item.id)"
-            action="employees/delete"
-            method="DELETE"
-          />
-        </td>
       </tr>
     </template>
   </VqDataTable>

@@ -1,64 +1,47 @@
 # VqCheckbox
 
-A validated checkbox input that stores a boolean value. Wraps Vuetify's `VCheckbox` with automatic `vee-validate` integration.
+A validated checkbox. Wraps Vuetify's `VCheckbox` and binds to the parent form by `name`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| *(all VCheckbox props)* | | | All Vuetify `VCheckbox` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
 
-## Basic Example
+Any other attribute goes to [`VCheckbox`](https://vuetifyjs.com/api/v-checkbox), including `label` and `color`.
 
-```vue
-<script setup>
-import { VqForm, VqTextField, VqCheckbox, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string, boolean } from "yup";
+## Events and slots
 
-const schema = object({
-  email: string().required().email(),
-  agree: boolean().oneOf([true], "You must accept the terms"),
-});
-</script>
+There are no events of its own. Listeners and slots go to `VCheckbox`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
 
-<template>
-  <VqForm id="register" action="auth/register" :validation-schema="schema">
-    <VqTextField name="email" label="Email" />
-    <VqCheckbox name="agree" label="I agree to the Terms of Service" />
-    <VqSubmitBtn>Register</VqSubmitBtn>
-  </VqForm>
-</template>
-```
+## Value
 
-## Multiple Checkboxes
+The value is `undefined` until the box is first toggled, then `true` or `false`.
+
+## Required checkbox
+
+Use both `required` and `oneOf`. Yup's `oneOf` alone accepts `undefined`, so a box nobody touched would pass.
 
 ```vue
 <script setup>
 import { VqForm, VqCheckbox, VqSubmitBtn } from "@qnx/vuetify";
-import { object, boolean } from "yup";
+import { boolean, object } from "yup";
 
 const schema = object({
-  emailNotifications: boolean(),
-  smsNotifications: boolean(),
-  marketingEmails: boolean(),
+  agree: boolean()
+    .required("You must accept the terms")
+    .oneOf([true], "You must accept the terms"),
 });
 </script>
 
 <template>
-  <VqForm id="notifications" action="users/notifications" method="PUT" :validation-schema="schema">
-    <p class="text-subtitle-1 mb-2">Notification Preferences</p>
-    <VqCheckbox name="emailNotifications" label="Email notifications" />
-    <VqCheckbox name="smsNotifications" label="SMS notifications" />
-    <VqCheckbox name="marketingEmails" label="Marketing emails" />
-    <VqSubmitBtn>Save Preferences</VqSubmitBtn>
+  <VqForm id="terms" action="terms" :validation-schema="schema">
+    <VqCheckbox name="agree" label="I agree to the terms" />
+    <VqSubmitBtn>Continue</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## With Color
-
-```vue
-<VqCheckbox name="agree" label="I agree" color="primary" />
-<VqCheckbox name="subscribe" label="Subscribe to newsletter" color="success" />
-```
+::: warning multipart forms
+With `form-data`, `false` isn't sent to the server. See [multipart/form-data values](/guide/server-contract#multipart-form-data-values).
+:::

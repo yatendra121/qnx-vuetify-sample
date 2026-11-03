@@ -1,91 +1,63 @@
 # VqSubmitBtn
 
-A submit button that automatically reflects the parent form's busy state — disabling itself and showing a loading spinner while the form is submitting.
+A submit button that shows a spinner while its form's request runs. Wraps Vuetify's `VBtn`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `form` | `string` | `undefined` | Form ID — only needed when used **outside** a `VqForm` |
-| *(all VBtn props)* | | | All Vuetify `VBtn` props are forwarded |
+| `text` | `string` | `undefined` | Button text, when there's no default slot. Falls back to the [locale](/composables/set-vq-locale) `submit` text. |
+| `form` | `string` | `undefined` | The `id` of the form to submit, for a button placed outside it. |
 
-## Features
+Any other attribute goes to [`VBtn`](https://vuetifyjs.com/api/v-btn), including `block`, `size`, and `variant`. `color` defaults to `primary`.
 
-- Automatically injects `formId` from the parent `VqForm` (no prop needed when nested inside)
-- Disables and shows a loading spinner during form submission
-- Uses `type="submit"` for native HTML form behavior
-- Accepts all standard Vuetify `VBtn` props (color, size, variant, block, etc.)
+## Events and slots
 
-## Basic Usage — Inside VqForm
+There are no events of its own. Listeners go to `VBtn`.
 
-No `form` prop needed. `VqSubmitBtn` injects the form ID automatically:
+| Slot | Description |
+|------|-------------|
+| `default` | Button content. Replaces `text`. |
 
-```vue
-<template>
-  <VqForm id="create-user" action="users/create">
-    <VqTextField name="name" label="Name" />
-    <VqSubmitBtn>Create User</VqSubmitBtn>
-  </VqForm>
-</template>
-```
+`VBtn` ignores clicks while its spinner shows, but pressing Enter in a field can still submit the form again.
 
-## Outside VqForm
-
-Pass the `form` prop explicitly when the button is rendered outside the form:
-
-```vue
-<template>
-  <VqForm id="my-form" action="users/create">
-    <VqTextField name="name" label="Name" />
-  </VqForm>
-
-  <!-- Button rendered outside the form -->
-  <VqSubmitBtn form="my-form">Submit</VqSubmitBtn>
-</template>
-```
-
-## With Vuetify VBtn Props
-
-```vue
-<!-- Full width -->
-<VqSubmitBtn block>Sign In</VqSubmitBtn>
-
-<!-- Custom color and size -->
-<VqSubmitBtn color="success" size="large">Save Changes</VqSubmitBtn>
-
-<!-- Outlined variant -->
-<VqSubmitBtn variant="outlined" color="primary">Save Draft</VqSubmitBtn>
-```
-
-## Full Login Form Example
+## Inside a form
 
 ```vue
 <script setup>
 import { VqForm, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
-
-const schema = object({
-  email: string().required().email(),
-  password: string().required().min(8),
-});
 </script>
 
 <template>
-  <v-card max-width="400" class="mx-auto pa-6">
-    <v-card-title class="mb-4">Sign In</v-card-title>
-    <VqForm
-      id="login"
-      action="auth/login"
-      method="POST"
-      :validation-schema="schema"
-      @submited-success="(res) => router.push('/dashboard')"
-    >
-      <VqTextField name="email" label="Email" type="email" />
-      <VqTextField name="password" label="Password" type="password" />
-      <VqSubmitBtn block color="primary" class="mt-4">
-        Sign In
-      </VqSubmitBtn>
-    </VqForm>
-  </v-card>
+  <VqForm id="create-user" action="users">
+    <VqTextField name="name" label="Name" />
+    <VqSubmitBtn text="Create user" />
+  </VqForm>
+</template>
+```
+
+## Outside a form
+
+The `form` prop connects the button to the form, but it doesn't show the spinner in this version.
+
+```vue
+<script setup>
+import { VqForm, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
+</script>
+
+<template>
+  <VqForm id="my-form" action="users">
+    <VqTextField name="name" label="Name" />
+  </VqForm>
+
+  <VqSubmitBtn form="my-form">Submit</VqSubmitBtn>
+</template>
+```
+
+## With VBtn props
+
+```vue
+<template>
+  <VqSubmitBtn block color="success" size="large" prepend-icon="mdi-check">Save</VqSubmitBtn>
 </template>
 ```

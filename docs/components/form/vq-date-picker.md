@@ -1,85 +1,59 @@
 # VqDatePicker
 
-A validated date selection input displayed inside a dialog or menu. Wraps Vuetify's `VDatePicker` inside a `VTextField` trigger.
+A validated date input: a read-only text field that opens Vuetify's `VDatePicker` in a menu or dialog.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| `label` | `string` | `""` | Label for the trigger text field |
-| `type` | `boolean` | `false` | `false` = VMenu, `true` = VDialog |
-| `multiple` | `boolean` | `false` | Allow multiple date selection |
-| *(all VDatePicker props)* | | | All Vuetify `VDatePicker` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
+| `label` | `string` | `""` | Label of the text field. |
+| `type` | `boolean` | `false` | `false` opens a menu, `true` opens a dialog. Read once. |
+| `multiple` | `boolean` | `false` | Has no effect in this version. |
 
-## Features
+Any other attribute goes to [`VDatePicker`](https://vuetifyjs.com/api/v-date-picker), **not** the text field. For example `min`, `max`, and `color` work, but `variant` and `prepend-inner-icon` don't.
 
-- Stores date(s) in `YYYY-MM-DD` format
-- Click the text field to open the date picker
-- Supports both menu (inline dropdown) and dialog (modal) display modes
-- Supports single and multiple date selection
+## Events and slots
 
-## Single Date — Menu Mode
+There are no events of its own. Listeners and slots go to `VDatePicker`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+## Value
+
+- A picked date is stored as a `Date` at local midnight, and shown as `YYYY-MM-DD`.
+- `initial-values` can be a `Date` or a string.
+- The menu stays open after picking. Click outside to close it.
+
+::: warning Time zones
+- A date-only string such as `2024-03-05` is read as UTC, so it shows as `2024-03-04` west of Greenwich.
+- A `Date` goes into a JSON body as UTC, so a date picked in India, for example, reaches the server as the previous day.
+:::
+
+## Example
+
+Use Yup's `date()`, since the value is a `Date`.
 
 ```vue
 <script setup>
 import { VqForm, VqDatePicker, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
+import { date, object } from "yup";
 
 const schema = object({
-  birthDate: string().required("Date of birth is required"),
+  birthDate: date().required("Date of birth is required"),
 });
 </script>
 
 <template>
-  <VqForm id="profile" action="profile/update" method="PUT" :validation-schema="schema">
-    <VqDatePicker name="birthDate" label="Date of Birth" />
+  <VqForm id="profile" action="profile" :validation-schema="schema">
+    <VqDatePicker name="birthDate" label="Date of birth" />
     <VqSubmitBtn>Save</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Single Date — Dialog Mode
+## Dialog with a limit
 
 ```vue
-<VqDatePicker name="eventDate" label="Event Date" :type="true" />
-```
-
-## Multiple Dates
-
-```vue
-<VqDatePicker
-  name="holidays"
-  label="Select Holidays"
-  :multiple="true"
-  :type="true"
-/>
-```
-
-## Date Range Form Example
-
-```vue
-<script setup>
-import { VqForm, VqDatePicker, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
-
-const schema = object({
-  startDate: string().required("Start date is required"),
-  endDate: string().required("End date is required"),
-});
-</script>
-
 <template>
-  <VqForm id="booking" action="bookings/create" :validation-schema="schema">
-    <v-row>
-      <v-col cols="6">
-        <VqDatePicker name="startDate" label="Check-in Date" />
-      </v-col>
-      <v-col cols="6">
-        <VqDatePicker name="endDate" label="Check-out Date" />
-      </v-col>
-    </v-row>
-    <VqSubmitBtn>Book Now</VqSubmitBtn>
-  </VqForm>
+  <VqDatePicker name="eventDate" label="Event date" type min="2026-01-01" />
 </template>
 ```

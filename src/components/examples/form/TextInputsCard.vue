@@ -11,7 +11,6 @@
       <v-row>
         <v-col cols="12" md="4">
           <div class="text-caption text-medium-emphasis mb-1">vq-text-field</div>
-          <!-- variant="filled" is the Vuetify 4 default -->
           <vq-text-field
             variant="outlined"
             :counter="50"

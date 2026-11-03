@@ -1,62 +1,68 @@
 # Introduction
 
-Welcome to `@qnx/vuetify`, a Vue.js library designed to simplify the development and management of Vuetify-based forms. By handling form validation, data management, and server communication, `@qnx/vuetify` helps you reduce code complexity and maintain cleaner, more manageable codebases.
+`@qnx/vuetify` is a set of Vue 3 components built on Vuetify 4. It removes the wiring you would otherwise repeat for forms and server-driven data:
 
-With a suite of specialized components and composables, `@qnx/vuetify` enhances productivity by streamlining common form-related tasks and making it easy to integrate forms into your Vuetify projects.
+- **Form inputs** bind to a [vee-validate](https://vee-validate.logaretm.com/v4/) form by `name`, so you don't write `v-model` or `useField`.
+- **`VqForm`** validates, sends the request with axios, tracks the busy state, and puts server validation errors on the matching fields.
+- **`VqDataTable` and `VqList`** fetch pages from your API, and reload when a paired `VqTableFilter` changes.
 
-## Key Features
+::: info Version
+These docs describe the installed build, shown in the top navigation. Every behaviour here was tested against that build, and the [Limitations](/guide/limitations) page lists where it falls short.
+:::
 
-- **Simplified Form Creation**: Generate forms with minimal code by using `@qnx/vuetify`'s ready-to-use components, which handle inputs, validation, and submission.
-- **Integrated Validation**: Built-in validation support using `@vee-validate` and `yup`, allowing robust and customizable input checks and error handling.
-- **Data Management**: Effortlessly manage form data with intuitive binding, reset, and submission capabilities.
-- **Seamless API Integration**: Easily configure forms to interact with your backend, supporting RESTful and GraphQL APIs.
-- **Extensible & Customizable**: Designed to work seamlessly within the Vuetify ecosystem, with full support for Vuetify styling and custom themes.
-
-## Why Choose @qnx/vuetify?
-
-Working with forms can quickly become complex, especially when managing validation, data handling, and server communication. `@qnx/vuetify` reduces this complexity by:
-
-- **Abstracting Common Tasks**: Handling form validation, input states, and server communication so you can focus on logic.
-- **Reducing Boilerplate**: Eliminating repetitive code and enhancing readability and maintainability.
-- **Promoting Consistency**: Offering a standardized approach to form handling, making your code easier to understand and maintain.
-
-## Example Use Case
-
-Here's a quick example to show how simple form creation is with `@qnx/vuetify`:
+## A first form
 
 ```vue
 <script setup>
-import { VqForm, VqTextField } from "@qnx/vuetify";
+import { VqForm, VqTextField, VqSubmitBtn } from "@qnx/vuetify";
 import { object, string } from "yup";
 
-let validationSchema = object({
-  name: string().required(),
-  email: string().required().email(),
+const schema = object({
+  name: string().required("Name is required"),
+  email: string().required("Email is required").email("Invalid email"),
 });
 
-const initialValues = { name: "User", email: "user@example.com" };
+const initialValues = { name: "Asha", email: "asha@example.com" };
+
 const onSuccess = (res) => {
-  console.log("Form submitted:", res);
+  console.log(res.getMessage());
 };
 </script>
 
 <template>
   <VqForm
-    action="user/create"
-    method="POST"
-    :validation-schema="validationSchema"
+    id="create-user"
+    action="users"
+    :validation-schema="schema"
     :initial-values="initialValues"
     @submited-success="onSuccess"
   >
-    <VqTextField name="name" label="Name" placeholder="Enter your name" />
-    <VqTextField name="email" label="Email" placeholder="Enter your email" />
-    <button type="submit">Submit</button>
+    <VqTextField name="name" label="Name" />
+    <VqTextField name="email" label="Email" />
+    <VqSubmitBtn>Create</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Next Steps
+The event name `submited-success` is spelled with one `t`. That is the library's public API.
 
-To start using @qnx/vuetify, continue to the Installation Guide to set up the package and dependencies. Then, check out the Components section for a full list of available form and data components.
+## What's in the package
 
-Happy coding!
+| Area | Exports |
+|------|---------|
+| Form | [`VqForm`](/components/form/vq-form), [`VqSubmitBtn`](/components/form/vq-submit-btn), [`useVqForm`](/composables/use-vq-form) |
+| Inputs | [`VqTextField`](/components/form/vq-text-field), [`VqTextarea`](/components/form/vq-textarea), [`VqCheckbox`](/components/form/vq-checkbox), [`VqAutocomplete`](/components/form/vq-autocomplete), [`VqDatePicker`](/components/form/vq-date-picker), [`VqTimePicker`](/components/form/vq-time-picker), [`VqColorPicker`](/components/form/vq-color-picker), [`VqOtpInput`](/components/form/vq-otp-input), [`VqFileInput`](/components/form/vq-file-input), [`VqFileUpload`](/components/form/vq-file-upload) |
+| Data | [`VqDataTable`](/components/data/vq-data-table), [`VqSerialNo`](/components/data/vq-serial-no), [`VqList`](/components/data/vq-list), [`VqListLoadMoreBtn`](/components/data/vq-list-load-more-btn), [`VqTableFilter`](/components/data/vq-table-filter) |
+| Helpers | [`useVqDataTable`](/composables/use-vq-data-table), [`useVqList`](/composables/use-vq-list), [`collectVqHeaders`](/composables/collect-vq-headers), [`useFormFilterRepository`](/composables/use-form-filter-repository), [`updateItemKeyValue`, `updateItemValue`, `deleteItemValue`](/composables/list-item-helpers) |
+| Locale | [`setVqLocale`, `resetVqLocale`](/composables/set-vq-locale) |
+| `@qnx/vuetify/integrations` | [`VqTextEditor`, `setConfig`](/components/integration/vq-text-editor) |
+
+## Try it
+
+The [Playground](https://qnx-vuetify-sample.vercel.app/) lets you change the props of every export and watch its events, against a mock API.
+
+## Next steps
+
+1. [Install and set up](/guide/installation/) the library.
+2. Read how [fields, values, and submission](/guide/usage/) fit together.
+3. Check the [response shapes your API must return](/guide/server-contract).

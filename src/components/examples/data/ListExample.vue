@@ -40,7 +40,7 @@
         </v-avatar>
         <span class="text-subtitle-1 font-weight-semibold">VqList</span>
         <v-spacer />
-        <v-chip size="x-small" color="success" variant="tonal">GET /api/user</v-chip>
+        <v-chip size="x-small" color="success" variant="tonal">GET users</v-chip>
       </v-card-title>
       <v-divider />
 
@@ -48,7 +48,7 @@
         <VqList
           :id="listId"
           :page-size="10"
-          action="https://nx-next-ecommerce-production.up.railway.app/api/user"
+          action="users"
         >
           <template #default="{ items }">
             <v-table>
@@ -94,7 +94,7 @@ import { useVqList } from '@qnx/vuetify'
 const listId = 'user_list'
 
 const VqList = useVqList<{
-  id: string
+  id: number
   name: string
   email: string
   createdAt: string
