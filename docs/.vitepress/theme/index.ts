@@ -19,6 +19,13 @@ const vuetify = createVuetify({
     VFileUpload,
   },
   directives,
+  defaults: {
+    VTextField: { variant: 'outlined' },
+    VTextarea: { variant: 'outlined' },
+    VAutocomplete: { variant: 'outlined' },
+    VSelect: { variant: 'outlined' },
+    VFileInput: { variant: 'outlined' },
+  },
   theme: {
     themes: {
       light: {

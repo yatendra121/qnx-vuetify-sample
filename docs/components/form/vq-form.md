@@ -1,8 +1,22 @@
+<script setup>
+import FormExample from '../../../src/components/examples/form/FormExample.vue'
+</script>
+
 # VqForm
 
 The core form wrapper component. Manages field validation, API submission, busy state tracking, and server error mapping.
 
 > All input components (`VqTextField`, `VqTextarea`, etc.) must be nested inside `VqForm`.
+
+## Live Demo
+
+<VDemo>
+  <FormExample />
+</VDemo>
+
+::: details View source code
+<<< ../../../src/components/examples/form/FormExample.vue
+:::
 
 ## Props
 
