@@ -26,7 +26,7 @@ import {
     VTimePicker
 } from 'vuetify/components'
 import type { Component } from 'vue'
-import type { CodeContext, ControlDef, Preset, ShowcaseEntry, SlotDoc, SlotExample } from '../types'
+import type { CodeContext, ControlDef, Preset, PlaygroundEntry, SlotDoc, SlotExample } from '../types'
 import { attrsFromConfig, slotTemplates, tag, yupSchema } from '../utils/codegen'
 import {
     COLORS,
@@ -133,8 +133,8 @@ const define = (
     name: string,
     wrapsName: string,
     wraps: Component,
-    entry: Pick<ShowcaseEntry, 'description' | 'controls' | 'presets' | 'events' | 'slots' | 'examples'> & Partial<ShowcaseEntry>
-): ShowcaseEntry => ({
+    entry: Pick<PlaygroundEntry, 'description' | 'controls' | 'presets' | 'events' | 'slots' | 'examples'> & Partial<PlaygroundEntry>
+): PlaygroundEntry => ({
     name,
     exportName: name,
     importPath: QNX,
@@ -565,7 +565,7 @@ const fileUpload = define(VqFileUpload, 'VqFileUpload', 'VFileUpload', VFileUplo
     examples: [insideForm('VqFileUpload', 'name="documents" title="Drop documents here" multiple')]
 })
 
-const textEditor: ShowcaseEntry = {
+const textEditor: PlaygroundEntry = {
     name: 'VqTextEditor',
     exportName: 'VqTextEditor',
     importPath: QNX_INTEGRATIONS,

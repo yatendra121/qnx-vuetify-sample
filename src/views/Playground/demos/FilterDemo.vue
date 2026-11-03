@@ -1,5 +1,5 @@
 <template>
-  <VqTableFilter :id="String(config.id)" class="showcase-filter">
+  <VqTableFilter :id="String(config.id)" class="playground-filter">
     <FormBridge v-slot="{ form }">
       <div class="d-flex flex-wrap ga-3">
         <VqTextField class="flex-1-1-0" style="min-width: 180px" name="search" label="Search by name" />

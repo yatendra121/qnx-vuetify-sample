@@ -19,7 +19,7 @@
         <div class="d-flex flex-wrap ga-2 mb-3">
           <VqSubmitBtn v-bind="buttonProps" @click="log('click')">
             <template v-if="slotExamples.length" #default>
-              <span class="showcase-slot">{{ slotExamples[0].content }}</span>
+              <span class="playground-slot">{{ slotExamples[0].content }}</span>
             </template>
           </VqSubmitBtn>
           <v-btn v-if="!compact" variant="text" data-testid="reset-form" @click="form.resetForm()">Reset form</v-btn>
@@ -45,7 +45,7 @@ const props = defineProps(demoProps)
 
 const uid = useId()
 const isButtonDemo = computed(() => props.entry.name === 'VqSubmitBtn')
-const formId = computed(() => (isButtonDemo.value ? `showcase-form-${uid}` : String(props.config.id)))
+const formId = computed(() => (isButtonDemo.value ? `playground-form-${uid}` : String(props.config.id)))
 
 const schema = computed(() =>
   props.config.withSchema

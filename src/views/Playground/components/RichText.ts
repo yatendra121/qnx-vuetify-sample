@@ -8,7 +8,7 @@ export const RichText: FunctionalComponent<{ text?: string }> = ({ text }) =>
         (text ?? '')
             .split('`')
             .map((part, index) =>
-                index % 2 ? h('code', { class: 'showcase-inline-code' }, part) : part
+                index % 2 ? h('code', { class: 'playground-inline-code' }, part) : part
             )
     )
 

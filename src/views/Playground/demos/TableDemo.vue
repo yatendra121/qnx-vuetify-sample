@@ -32,7 +32,7 @@
       </tr>
     </template>
     <template v-for="slot in slotExamples" :key="slot.name" #[slot.name]="scope">
-      <span class="showcase-slot">{{ slot.name === 'item.status' ? (scope as any).value : slot.content }}</span>
+      <span class="playground-slot">{{ slot.name === 'item.status' ? (scope as any).value : slot.content }}</span>
     </template>
   </component>
 </template>

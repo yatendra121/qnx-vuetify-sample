@@ -1,6 +1,6 @@
 import { VqDataTable, VqList, VqListLoadMoreBtn, VqSerialNo, VqTableFilter } from '@qnx/vuetify'
 import { VBtn, VDataTableServer, VList } from 'vuetify/components'
-import type { CodeContext, Preset, ShowcaseEntry, SlotDoc } from '../types'
+import type { CodeContext, Preset, PlaygroundEntry, SlotDoc } from '../types'
 import { attrsFromConfig, slotTemplates, tag } from '../utils/codegen'
 import { BTN_VARIANTS, COLORS, DENSITIES, QNX, bool, marker, mockLatency, mockMode, num, scenario, select, text } from './shared'
 
@@ -77,7 +77,7 @@ const tableCode = (tagName: string, script?: string, extraImports: string[] = []
     template: tag(tagName, tableAttrs(context), slotTemplates(context.slots))
 })
 
-const table = (entry: Partial<ShowcaseEntry> & Pick<ShowcaseEntry, 'name' | 'description' | 'kind'>): ShowcaseEntry => ({
+const table = (entry: Partial<PlaygroundEntry> & Pick<PlaygroundEntry, 'name' | 'description' | 'kind'>): PlaygroundEntry => ({
     exportName: entry.name,
     importPath: QNX,
     category: TABLES,
@@ -195,7 +195,7 @@ const headersEntry = table({
 
 const ROW_NOTE = 'Row ids are compared with `===`, so the id must match the row\'s type. With an unknown id the lookup returns -1 and the library does not guard it: update helpers throw a TypeError and `deleteItemValue` removes the last row. Try it with the target id control.'
 
-const rowHelper = (name: string, signature: string, description: string, params: ShowcaseEntry['params'], call: string): ShowcaseEntry =>
+const rowHelper = (name: string, signature: string, description: string, params: PlaygroundEntry['params'], call: string): PlaygroundEntry =>
     table({
         name,
         kind: 'utility',
@@ -287,7 +287,7 @@ const listPresets: Preset[] = [
     { label: 'Two lines', config: { lines: 'two', density: 'compact' } }
 ]
 
-const list: ShowcaseEntry = {
+const list: PlaygroundEntry = {
     name: 'VqList',
     exportName: 'VqList',
     importPath: QNX,
@@ -323,7 +323,7 @@ const list: ShowcaseEntry = {
     ]
 }
 
-const useList: ShowcaseEntry = {
+const useList: PlaygroundEntry = {
     ...list,
     name: 'useVqList',
     exportName: 'useVqList',
@@ -342,7 +342,7 @@ const useList: ShowcaseEntry = {
     examples: [{ title: 'Typed rows', description: 'Types are compile-time only.', code: `const MemberList = useVqList<Member>()` }]
 }
 
-const loadMore: ShowcaseEntry = {
+const loadMore: PlaygroundEntry = {
     name: 'VqListLoadMoreBtn',
     exportName: 'VqListLoadMoreBtn',
     importPath: QNX,
@@ -388,7 +388,7 @@ ${tag('VqListLoadMoreBtn', attrsFromConfig(config, controls), slotTemplates(slot
     examples: [{ title: 'Inside a list', description: 'No props are needed.', code: `<VqList id="members" action="members" v-slot="{ items }">\n  <v-list-item v-for="item in items" :key="item.id" :title="item.name" />\n  <VqListLoadMoreBtn />\n</VqList>` }]
 }
 
-const filter: ShowcaseEntry = {
+const filter: PlaygroundEntry = {
     name: 'VqTableFilter',
     exportName: 'VqTableFilter',
     importPath: QNX,
@@ -427,7 +427,7 @@ const filter: ShowcaseEntry = {
     examples: [{ title: 'Shared id', description: 'The id is the only link between the two.', code: `<VqTableFilter id="members">\n  <VqTextField name="search" label="Search" />\n</VqTableFilter>\n<VqDataTable id="members" action="members" :headers="headers" />` }]
 }
 
-const filterRepo: ShowcaseEntry = {
+const filterRepo: PlaygroundEntry = {
     name: 'useFormFilterRepository',
     exportName: 'useFormFilterRepository',
     importPath: QNX,

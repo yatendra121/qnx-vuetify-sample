@@ -4,7 +4,7 @@
       <template #prepend>
         <v-icon icon="mdi-vuetify" size="26" color="primary" class="ml-3" />
       </template>
-      <v-app-bar-title class="font-weight-bold">Component Showcase</v-app-bar-title>
+      <v-app-bar-title class="font-weight-bold">Playground</v-app-bar-title>
       <template #append>
         <div class="d-none d-sm-flex align-center ga-2 me-2">
           <v-chip
@@ -51,7 +51,7 @@
 import { ref, watch } from 'vue'
 import { useTheme } from 'vuetify'
 import { version as libraryVersion } from '@qnx/vuetify/package.json'
-import { coverage } from '@/views/ComponentShowcase/catalog'
+import { coverage } from '@/views/Playground/catalog'
 
 const coverageReport = coverage()
 const theme = ref('light')

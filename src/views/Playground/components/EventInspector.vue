@@ -10,16 +10,16 @@
       </template>
     </v-card-item>
     <v-divider />
-    <div class="showcase-events" data-testid="event-log" aria-live="polite">
+    <div class="playground-events" data-testid="event-log" aria-live="polite">
       <p v-if="!events.length" class="text-body-medium text-medium-emphasis pa-4">
         Interact with the preview. Emitted events and mock requests are listed here with their payloads.
       </p>
-      <details v-for="event in events" :key="event.id" class="showcase-event" :open="event.id === events[0].id">
+      <details v-for="event in events" :key="event.id" class="playground-event" :open="event.id === events[0].id">
         <summary>
           <code :class="event.name === 'request' ? 'text-medium-emphasis' : 'text-primary'">{{ event.name }}</code>
           <span class="text-label-small text-medium-emphasis ms-auto">{{ event.time }}</span>
         </summary>
-        <pre class="showcase-code showcase-code--small">{{ event.payload }}</pre>
+        <pre class="playground-code playground-code--small">{{ event.payload }}</pre>
       </details>
     </div>
   </v-card>

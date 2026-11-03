@@ -1,13 +1,13 @@
 import * as library from '@qnx/vuetify'
 import * as integrations from '@qnx/vuetify/integrations'
-import type { ShowcaseEntry } from '../types'
+import type { PlaygroundEntry } from '../types'
 import { dataEntries } from './data'
 import { fieldEntries } from './fields'
 import { formEntries } from './forms'
 import { utilityEntries } from './utilities'
 import { QNX, QNX_INTEGRATIONS } from './shared'
 
-export const catalog: ShowcaseEntry[] = [
+export const catalog: PlaygroundEntry[] = [
     ...fieldEntries.filter((entry) => entry.category !== 'Integrations'),
     ...formEntries,
     ...dataEntries,

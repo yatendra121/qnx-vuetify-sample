@@ -9,10 +9,10 @@
     <v-btn variant="text" data-testid="reset-locale" @click="reset">resetVqLocale()</v-btn>
   </div>
 
-  <VqForm id="showcase-locale-form" :action="mockAction('members')">
+  <VqForm id="playground-locale-form" :action="mockAction('members')">
     <VqSubmitBtn />
   </VqForm>
-  <VqList id="showcase-locale-list" class="mt-3" :action="mockAction('members')" :page-size="2">
+  <VqList id="playground-locale-list" class="mt-3" :action="mockAction('members')" :page-size="2">
     <template #default="{ items }">
       <v-list-item v-for="item in items as any[]" :key="item.id" :title="item.name" />
       <VqListLoadMoreBtn class="ma-2" />

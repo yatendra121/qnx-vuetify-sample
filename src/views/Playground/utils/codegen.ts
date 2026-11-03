@@ -1,4 +1,4 @@
-import type { CodeSample, ControlDef, ShowcaseConfig, SlotExample } from '../types'
+import type { CodeSample, ControlDef, PlaygroundConfig, SlotExample } from '../types'
 
 export const kebab = (value: string) =>
     value.replace(/[A-Z]/g, (char) => `-${char.toLowerCase()}`)
@@ -7,7 +7,7 @@ const escapeAttr = (value: string) => value.replace(/"/g, '&quot;')
 
 // One entry per attribute that differs from "leave it to the default".
 export const attrsFromConfig = (
-    config: ShowcaseConfig,
+    config: PlaygroundConfig,
     controls: ControlDef[]
 ): string[] => {
     const attrs: string[] = []
@@ -31,7 +31,7 @@ export const attrsFromConfig = (
 
 // The props a preview binds, using the same "omit defaults" rule as the code.
 export const propsFromConfig = (
-    config: ShowcaseConfig,
+    config: PlaygroundConfig,
     controls: ControlDef[]
 ) => {
     const props: Record<string, unknown> = {}

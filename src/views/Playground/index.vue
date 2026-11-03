@@ -25,12 +25,12 @@
     </span>
   </v-alert>
 
-  <div class="showcase">
-    <aside v-if="!mobile" class="showcase__nav">
+  <div class="playground">
+    <aside v-if="!mobile" class="playground__nav">
       <ComponentNav :selected="entry.name" @select="select" />
     </aside>
 
-    <main class="showcase__main">
+    <main class="playground__main">
       <v-btn
         v-if="mobile"
         block
@@ -50,7 +50,7 @@
           <v-chip v-if="entry.wraps" size="x-small" variant="tonal">wraps {{ entry.wraps.name }}</v-chip>
         </div>
         <p class="text-body-medium text-medium-emphasis mb-2"><RichText :text="entry.description" /></p>
-        <code class="showcase-inline-code">{{ importLine }}</code>
+        <code class="playground-inline-code">{{ importLine }}</code>
       </header>
 
       <v-alert
@@ -68,8 +68,8 @@
         </ul>
       </v-alert>
 
-      <div class="showcase__grid">
-          <v-card class="showcase__preview-card">
+      <div class="playground__grid">
+          <v-card class="playground__preview-card">
             <v-card-item>
               <v-card-title class="text-title-medium">Preview</v-card-title>
               <template #append>
@@ -92,7 +92,7 @@
               </v-chip>
             </div>
             <v-divider />
-            <v-card-text class="showcase__preview" data-testid="preview">
+            <v-card-text class="playground__preview" data-testid="preview">
               <component
                 :is="demos[entry.demo]"
                 :key="previewKey"
@@ -105,7 +105,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="showcase__tabs-card">
+          <v-card class="playground__tabs-card">
             <v-tabs v-model="tab" density="compact" color="primary" show-arrows>
               <v-tab value="code" data-testid="tab-code">Code</v-tab>
               <v-tab value="api" data-testid="tab-api">API</v-tab>
@@ -116,7 +116,7 @@
             <v-card-text>
               <CodePanel v-if="tab === 'code'" :sample="codeSample" />
               <ApiReference v-else-if="tab === 'api'" :entry="entry" />
-              <div v-else-if="tab === 'states'" class="showcase__gallery" data-testid="states-gallery">
+              <div v-else-if="tab === 'states'" class="playground__gallery" data-testid="states-gallery">
                 <div v-for="preset in entry.presets" :key="preset.label">
                   <div class="text-label-medium text-medium-emphasis mb-2">{{ preset.label }}</div>
                   <component
@@ -139,13 +139,13 @@
                     </div>
                     <CopyButton :text="example.code" />
                   </div>
-                  <pre class="showcase-code"><code>{{ example.code }}</code></pre>
+                  <pre class="playground-code"><code>{{ example.code }}</code></pre>
                 </section>
               </div>
             </v-card-text>
           </v-card>
 
-        <div class="showcase__secondary">
+        <div class="playground__secondary">
           <ConfigPanel
             :controls="entry.controls"
             :config="config"
@@ -169,7 +169,7 @@
           <v-btn icon="mdi-close" variant="text" aria-label="Close" data-testid="close-nav" @click="navOpen = false" />
         </template>
       </v-card-item>
-      <v-card-text class="showcase__nav-dialog">
+      <v-card-text class="playground__nav-dialog">
         <ComponentNav :selected="entry.name" @select="select" />
       </v-card-text>
     </v-card>
@@ -182,7 +182,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import { version as libraryVersion } from '@qnx/vuetify/package.json'
 import { catalog, coverage, documentedButNotExported } from './catalog'
-import type { ConfigValue, Preset, ShowcaseConfig, ShowcaseEntry } from './types'
+import type { ConfigValue, Preset, PlaygroundConfig, PlaygroundEntry } from './types'
 import { installMockApi } from './utils/mockApi'
 import { printJson } from './utils/reflect'
 import ApiReference from './components/ApiReference.vue'
@@ -220,7 +220,7 @@ const coverageReport = coverage()
 const navOpen = ref(false)
 
 // In the query, so a selected component can be linked to directly.
-const entry = computed<ShowcaseEntry>(
+const entry = computed<PlaygroundEntry>(
   () =>
     catalog.find((item) => item.name === route.query.component) ?? catalog[0]
 )
@@ -237,10 +237,10 @@ const importLine = computed(() => {
   return `import ${clause} from '${importPath}'`
 })
 
-const defaultsOf = (item: ShowcaseEntry): ShowcaseConfig =>
+const defaultsOf = (item: PlaygroundEntry): PlaygroundConfig =>
   Object.fromEntries(item.controls.map((control) => [control.key, control.default]))
 
-const config = ref<ShowcaseConfig>(defaultsOf(entry.value))
+const config = ref<PlaygroundConfig>(defaultsOf(entry.value))
 const activeSlots = ref<string[]>([])
 const fieldError = ref<string>()
 const activePreset = ref<string>()
@@ -327,35 +327,35 @@ const codeSample = computed(() =>
 </script>
 
 <style>
-.showcase {
+.playground {
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr;
 }
 
 @media (min-width: 960px) {
-  .showcase {
+  .playground {
     grid-template-columns: 260px minmax(0, 1fr);
   }
 }
 
-.showcase__nav {
+.playground__nav {
   align-self: start;
   height: calc(100vh - 112px);
   position: sticky;
   top: 88px;
 }
 
-.showcase__nav-dialog {
+.playground__nav-dialog {
   height: calc(100vh - 72px);
 }
 
-.showcase__main {
+.playground__main {
   container-type: inline-size;
   min-width: 0;
 }
 
-.showcase__grid {
+.playground__grid {
   display: grid;
   gap: 16px;
   /* Narrow: configuration stays next to the preview it controls. */
@@ -363,7 +363,7 @@ const codeSample = computed(() =>
   grid-template-columns: minmax(0, 1fr);
 }
 
-.showcase__secondary {
+.playground__secondary {
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -371,28 +371,28 @@ const codeSample = computed(() =>
   min-width: 0;
 }
 
-.showcase__preview-card {
+.playground__preview-card {
   grid-area: preview;
   min-width: 0;
 }
 
-.showcase__tabs-card {
+.playground__tabs-card {
   grid-area: tabs;
   min-width: 0;
 }
 
-.showcase__preview {
+.playground__preview {
   overflow-x: auto;
 }
 
-.showcase__gallery {
+.playground__gallery {
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
 @container (min-width: 800px) {
-  .showcase__grid {
+  .playground__grid {
     align-items: start;
     grid-template-areas: 'preview side' 'tabs side';
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -400,22 +400,22 @@ const codeSample = computed(() =>
   }
 }
 
-.showcase-config {
+.playground-config {
   max-height: 460px;
   overflow-y: auto;
 }
 
-.showcase-events {
+.playground-events {
   max-height: 360px;
   overflow-y: auto;
 }
 
-.showcase-event {
+.playground-event {
   border-bottom: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
   padding: 8px 16px;
 }
 
-.showcase-event summary {
+.playground-event summary {
   align-items: center;
   cursor: pointer;
   display: flex;
@@ -424,11 +424,11 @@ const codeSample = computed(() =>
   overflow-wrap: anywhere;
 }
 
-.showcase-event pre {
+.playground-event pre {
   margin-top: 6px;
 }
 
-.showcase-code {
+.playground-code {
   background: rgba(var(--v-theme-on-surface), 0.05);
   border-radius: 8px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -439,14 +439,14 @@ const codeSample = computed(() =>
   white-space: pre;
 }
 
-.showcase-code--small {
+.playground-code--small {
   font-size: 0.75rem;
   max-height: 220px;
   overflow-y: auto;
   padding: 8px;
 }
 
-.showcase-inline-code {
+.playground-inline-code {
   background: rgba(var(--v-theme-on-surface), 0.05);
   border-radius: 6px;
   display: inline-block;
@@ -457,7 +457,7 @@ const codeSample = computed(() =>
 }
 
 /* Makes it obvious which outlet a slot example landed in. */
-.showcase-slot {
+.playground-slot {
   background: rgba(var(--v-theme-primary), 0.12);
   border: 1px dashed rgb(var(--v-theme-primary));
   border-radius: 4px;
@@ -468,18 +468,18 @@ const codeSample = computed(() =>
   white-space: nowrap;
 }
 
-.showcase-table code {
+.playground-table code {
   font-size: 0.75rem;
   overflow-wrap: anywhere;
 }
 
-.showcase-table th,
-.showcase-table td {
+.playground-table th,
+.playground-table td {
   padding-block: 6px !important;
   vertical-align: top;
 }
 
-.showcase-table .showcase-table__wrap {
+.playground-table .playground-table__wrap {
   min-width: 200px;
 }
 </style>

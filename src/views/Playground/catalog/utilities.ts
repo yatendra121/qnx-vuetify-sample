@@ -1,4 +1,4 @@
-import type { ShowcaseEntry } from '../types'
+import type { PlaygroundEntry } from '../types'
 import { QNX, QNX_INTEGRATIONS, text } from './shared'
 
 const CATEGORY = 'Setup & localization'
@@ -22,7 +22,7 @@ const localeLines = (config: Record<string, unknown>) =>
 
 const LOCALE_NOTE = 'This page restores the English defaults when you leave, so the demo can\'t change labels elsewhere in the app.'
 
-const setLocale: ShowcaseEntry = {
+const setLocale: PlaygroundEntry = {
     name: 'setVqLocale',
     exportName: 'setVqLocale',
     importPath: QNX,
@@ -53,7 +53,7 @@ const setLocale: ShowcaseEntry = {
     examples: [{ title: 'At app startup', description: 'Call it once before mounting.', code: `import { setVqLocale } from '@qnx/vuetify'\n\nsetVqLocale({ submit: 'Enviar' })` }]
 }
 
-const resetLocale: ShowcaseEntry = {
+const resetLocale: PlaygroundEntry = {
     ...setLocale,
     name: 'resetVqLocale',
     exportName: 'resetVqLocale',
@@ -69,7 +69,7 @@ const resetLocale: ShowcaseEntry = {
     examples: [{ title: 'When switching language', description: 'Start from English, then apply the next language.', code: `resetVqLocale()\nsetVqLocale(locales[language])` }]
 }
 
-const plugin = (name: string, importPath: ShowcaseEntry['importPath'], local: string, description: string): ShowcaseEntry => ({
+const plugin = (name: string, importPath: PlaygroundEntry['importPath'], local: string, description: string): PlaygroundEntry => ({
     name,
     exportName: 'default',
     importPath,
@@ -92,7 +92,7 @@ const plugin = (name: string, importPath: ShowcaseEntry['importPath'], local: st
     examples: [{ title: 'Registered by this app', description: 'See `src/plugins/index.ts`.', code: `app.use(${local})` }]
 })
 
-const setConfig: ShowcaseEntry = {
+const setConfig: PlaygroundEntry = {
     ...plugin('setConfig', QNX_INTEGRATIONS, 'unused', 'Sets the default `baseUrl` that VqTextEditor uses to load the TinyMCE script.'),
     exportName: 'setConfig',
     kind: 'utility',

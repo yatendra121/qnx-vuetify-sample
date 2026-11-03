@@ -4,8 +4,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'component-showcase',
-    component: () => import('@/views/ComponentShowcase/index.vue'),
+    name: 'playground',
+    component: () => import('@/views/Playground/index.vue'),
   },
   {
     path: '/:catchAll(.*)',

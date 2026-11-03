@@ -2,7 +2,7 @@
   <template v-if="entry.name === 'setConfig'">
     <p class="text-body-medium mb-3">
       Default script URL for VqTextEditor:
-      <code data-testid="editor-url" class="showcase-inline-code">{{ scriptUrl }}</code>
+      <code data-testid="editor-url" class="playground-inline-code">{{ scriptUrl }}</code>
     </p>
     <div class="d-flex flex-wrap ga-2">
       <v-btn color="primary" data-testid="apply-config" @click="applyConfig">setConfig({ baseUrl })</v-btn>

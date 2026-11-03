@@ -70,7 +70,7 @@ const FieldErrorSync = defineComponent({
 })
 
 const uid = useId()
-const formId = computed(() => `showcase-field-${uid}`)
+const formId = computed(() => `playground-field-${uid}`)
 const fieldPath = computed(() => {
   const name = String(props.config.name)
   return props.entry.fieldPath?.(name) ?? name

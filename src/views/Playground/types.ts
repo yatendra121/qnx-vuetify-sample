@@ -1,7 +1,7 @@
 import type { Component, VNodeChild } from 'vue'
 
 export type ConfigValue = string | number | boolean
-export type ShowcaseConfig = Record<string, ConfigValue>
+export type PlaygroundConfig = Record<string, ConfigValue>
 
 export type DemoId =
     | 'field'
@@ -31,7 +31,7 @@ export interface ControlDef {
 
 export interface Preset {
     label: string
-    config?: ShowcaseConfig
+    config?: PlaygroundConfig
     // Pushed into the form through vee-validate, as a failed validation would.
     fieldError?: string
 }
@@ -64,7 +64,7 @@ export interface CodeSample {
 }
 
 export interface CodeContext {
-    config: ShowcaseConfig
+    config: PlaygroundConfig
     controls: ControlDef[]
     slots: SlotExample[]
 }
@@ -75,7 +75,7 @@ export interface PracticalExample {
     code: string
 }
 
-export interface ShowcaseEntry {
+export interface PlaygroundEntry {
     // Display name; equal to the export name except for default exports.
     name: string
     exportName: string

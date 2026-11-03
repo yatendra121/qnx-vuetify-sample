@@ -9,7 +9,7 @@
       <v-spacer />
       <CopyButton :text="current" test-id="copy-code" />
     </div>
-    <pre class="showcase-code" data-testid="code-sample"><code>{{ current }}</code></pre>
+    <pre class="playground-code" data-testid="code-sample"><code>{{ current }}</code></pre>
     <p class="text-body-small text-medium-emphasis mt-2">
       Generated from the current configuration. The sample shows a real-looking <code>action</code>, while the preview answers from the built-in mock.
     </p>

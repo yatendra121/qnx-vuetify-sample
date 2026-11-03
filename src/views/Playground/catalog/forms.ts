@@ -1,6 +1,6 @@
 import { VqForm, VqSubmitBtn } from '@qnx/vuetify'
 import { VBtn } from 'vuetify/components'
-import type { ShowcaseEntry } from '../types'
+import type { PlaygroundEntry } from '../types'
 import { attrsFromConfig, tag } from '../utils/codegen'
 import { BTN_VARIANTS, COLORS, QNX, bool, marker, mockLatency, mockMode, scenario, select, text } from './shared'
 
@@ -12,7 +12,7 @@ const SUBMIT_EVENTS = [
 ]
 const BUSY_NOTE = 'Only 400 and 422 responses emit `submitedError`. Other failures, such as a 500, reject inside the library, emit nothing and log an uncaught error. Use `errorResponseHandler` if you need to catch them.'
 
-const form: ShowcaseEntry = {
+const form: PlaygroundEntry = {
     name: 'VqForm',
     exportName: 'VqForm',
     importPath: QNX,
@@ -106,7 +106,7 @@ const form: ShowcaseEntry = {
     ]
 }
 
-const submitBtn: ShowcaseEntry = {
+const submitBtn: PlaygroundEntry = {
     name: 'VqSubmitBtn',
     exportName: 'VqSubmitBtn',
     importPath: QNX,
@@ -167,7 +167,7 @@ const submitBtn: ShowcaseEntry = {
     ]
 }
 
-const useVqForm: ShowcaseEntry = {
+const useVqForm: PlaygroundEntry = {
     name: 'useVqForm',
     exportName: 'useVqForm',
     importPath: QNX,

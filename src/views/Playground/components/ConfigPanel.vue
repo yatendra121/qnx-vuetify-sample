@@ -9,7 +9,7 @@
       </template>
     </v-card-item>
     <v-divider />
-    <v-card-text class="showcase-config">
+    <v-card-text class="playground-config">
       <p v-if="!controls.length" class="text-body-medium text-medium-emphasis">
         This export has nothing to configure.
       </p>
@@ -77,11 +77,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { ConfigValue, ControlDef, ShowcaseConfig, SlotExample } from '../types'
+import type { ConfigValue, ControlDef, PlaygroundConfig, SlotExample } from '../types'
 
 const props = defineProps<{
   controls: ControlDef[]
-  config: ShowcaseConfig
+  config: PlaygroundConfig
   slotExamples: SlotExample[]
   activeSlots: string[]
 }>()

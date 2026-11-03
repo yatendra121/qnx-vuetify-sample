@@ -2,10 +2,10 @@ import { AxiosError, CanceledError } from 'axios'
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { _axios } from '@/plugins/axios'
 
-// Every showcase request goes to a `showcase-mock/...` URL and is answered here,
+// Every playground request goes to a `playground-mock/...` URL and is answered here,
 // so previews work offline and never reach the real API. Other requests pass
 // through untouched, and the interceptor only lives while the page is open.
-const PREFIX = 'showcase-mock'
+const PREFIX = 'playground-mock'
 
 export type MockMode = 'success' | 'empty' | 'validation' | 'server'
 

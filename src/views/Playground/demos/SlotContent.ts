@@ -12,7 +12,7 @@ export const SlotContent: FunctionalComponent<{
         ? (example.render(scope) as ReturnType<typeof h>)
         : h(
               'span',
-              { class: 'showcase-slot', title: `#${example.name}` },
+              { class: 'playground-slot', title: `#${example.name}` },
               example.content
           )
 

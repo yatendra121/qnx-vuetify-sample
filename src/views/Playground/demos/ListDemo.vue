@@ -28,7 +28,7 @@
       <div class="pa-2">
         <VqListLoadMoreBtn v-bind="buttonProps" @click="log('click')">
           <template v-for="slot in slotExamples" :key="slot.name" #[slot.name]>
-            <span class="showcase-slot">{{ slot.content }}</span>
+            <span class="playground-slot">{{ slot.content }}</span>
           </template>
         </VqListLoadMoreBtn>
       </div>
