@@ -41,7 +41,7 @@
         <span class="text-subtitle-1 font-weight-semibold">VqDataTable</span>
         <v-spacer />
         <v-chip size="x-small" color="success" variant="tonal"
-          >GET /api/user</v-chip
+          >GET users</v-chip
         >
       </v-card-title>
       <v-divider />
@@ -49,7 +49,7 @@
       <VqDataTable
         :id="tableId"
         :headers="headers"
-        action="https://nx-next-ecommerce-production.up.railway.app/api/user"
+        action="users"
       >
         <template #item="{ item, index }">
           <tr>
@@ -57,16 +57,6 @@
             <td>{{ item.name }}</td>
             <td>{{ item.email }}</td>
             <td>{{ item.createdAt }}</td>
-            <td>
-              <!-- <VqDatatableItemAction
-                :id="tableId"
-                :item-id="String(item.id)"
-                action="https://nx-next-ecommerce-production.up.railway.app/api/user/change-status"
-                method="PUT"
-                title="Change Status"
-                description="Are you sure you want to change the status of this user?"
-              /> -->
-            </td>
           </tr>
         </template>
       </VqDataTable>
@@ -77,7 +67,6 @@
 <script setup lang="ts">
 import {
   VqSerialNo,
-  //VqDatatableItemAction,
   collectVqHeaders,
   useVqDataTable,
 } from "@qnx/vuetify";
@@ -95,6 +84,5 @@ const headers = collectVqHeaders([
   { title: "Name", key: "name" },
   { title: "Email", key: "email" },
   { title: "Created At", key: "createdAt" },
-  { title: "Actions", key: "actions", sortable: false },
 ]);
 </script>

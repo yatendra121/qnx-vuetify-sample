@@ -1,59 +1,39 @@
-# useVqList\<TValue\>
+# useVqList
 
-Returns a type-safe `VqList` component. The `items` in the default slot is typed as `TValue[]` instead of `unknown[]`.
+Returns `VqList` with a typed `items` slot prop. It accepts the same [props, attributes, and slots](/components/data/vq-list) at runtime.
 
 ## Type Parameter
 
 | Param | Description |
 |-------|-------------|
-| `TValue` | TypeScript interface for each list item |
+| `TValue` | The type of each list item. |
+
+## Returns
+
+A component. The default slot's props are typed as `{ items: TValue[] }`.
+
+`loadMore`, `loading`, and `finished` are still passed at runtime, but aren't in the type, so using them in a type-checked template is an error. [`VqListLoadMoreBtn`](/components/data/vq-list-load-more-btn) doesn't need them.
 
 ## Example
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { useVqList, VqListLoadMoreBtn } from "@qnx/vuetify";
 
-interface Notification {
+interface Post {
   id: number;
-  message: string;
-  type: "info" | "warning" | "error";
-  createdAt: string;
-  read: boolean;
+  title: string;
 }
 
-const NotificationList = useVqList<Notification>();
+const PostList = useVqList<Post>();
 </script>
 
 <template>
-  <NotificationList
-    id="notifications"
-    action="notifications/list"
-    :page-size="20"
-    v-slot="{ items, loading, finished }"
-  >
-    <!-- items is typed as Notification[] -->
-    <v-list lines="two">
-      <v-list-item
-        v-for="notif in items"
-        :key="notif.id"
-        :subtitle="notif.createdAt"
-        :class="{ 'opacity-50': notif.read }"
-      >
-        <template #prepend>
-          <v-icon
-            :color="notif.type === 'error' ? 'red' : notif.type === 'warning' ? 'orange' : 'blue'"
-          >
-            mdi-bell
-          </v-icon>
-        </template>
-        <template #title>{{ notif.message }}</template>
-      </v-list-item>
-    </v-list>
-
-    <v-skeleton-loader v-if="loading" type="list-item-two-line@3" />
-    <VqListLoadMoreBtn />
-    <p v-if="finished" class="text-center text-grey py-4">All caught up!</p>
-  </NotificationList>
+  <PostList id="posts" action="posts" :page-size="15">
+    <template #default="{ items }">
+      <v-list-item v-for="post in items" :key="post.id" :title="post.title" />
+      <VqListLoadMoreBtn />
+    </template>
+  </PostList>
 </template>
 ```

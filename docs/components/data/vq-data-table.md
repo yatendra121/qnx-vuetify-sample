@@ -1,16 +1,14 @@
-<script setup>
-import DataTableExample from '../../../src/components/examples/data/DataTableExample.vue'
-</script>
-
 # VqDataTable
 
-A server-side paginated data table with automatic sorting, filtering, and loading state. Wraps Vuetify's `VDataTableServer`.
+A table that fetches its rows from your API, with server-side pagination and sorting. Wraps Vuetify's `VDataTableServer`.
 
-## Live Demo
+## Live demo
 
 <VDemo>
   <DataTableExample />
 </VDemo>
+
+The demo uses an in-browser mock API.
 
 ::: details View source code
 <<< ../../../src/components/examples/data/DataTableExample.vue
@@ -20,108 +18,79 @@ A server-side paginated data table with automatic sorting, filtering, and loadin
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `id` | `string` | required | Unique table ID — must match the paired `VqTableFilter` `id` |
-| `action` | `string` | required | API endpoint for fetching data |
-| `method` | `string` | `"GET"` | HTTP method |
-| `page` | `number` | `1` | Initial page number |
-| `itemsPerPage` | `number` | `10` | Rows per page |
-| `sortBy` | `SortByValue[]` | `[{ key: "name", order: "asc" }]` | Initial sort configuration |
+| `id` | `string` | required | Identifies the table. A `VqTableFilter` with the same `id` filters it. |
+| `action` | `string` | required | URL to fetch from. See the [Server Contract](/guide/server-contract#vqdatatable). |
+| `method` | `string` | `"GET"` | HTTP method. |
+| `page` | `number` | `1` | Starting page. |
+| `itemsPerPage` | `number` | `10` | Starting page size. |
+| `sortBy` | `{ key, order }[]` | `[{ key: "name", order: "asc" }]` | Starting sort. Set this if your data has no `name` column. |
 
-```typescript
-interface SortByValue {
-  key: string;
-  order: "asc" | "desc";
-}
-```
+`page`, `itemsPerPage`, `sortBy`, and `id` are only read once. Any other attribute goes to [`VDataTableServer`](https://vuetifyjs.com/api/v-data-table-server), including `headers`.
 
-## Features
+## Events
 
-- Renders Vuetify's `VDataTableServer`
-- Builds query string automatically: `?page=1&itemsPerPage=10&sortBy[key]=order&{filterValues}`
-- Watches the paired `VqTableFilter` and reloads on filter changes
-- Shows loading indicator during API requests
-- Provides `tableListId` injection for child components like `VqDatatableItemAction`
+There are no events of its own. Listeners go to `VDataTableServer`, such as `@update:options`. A failed request fires no event: see [Limitations](/guide/limitations#tables-and-lists).
 
-## Basic Example
+## Slots
+
+All slots go to `VDataTableServer`. The one you'll use most is `item`, which renders a row:
+
+| Slot prop | Description |
+|-----------|-------------|
+| `item` | The row object from your API. |
+| `index` | The row's position on the current page, starting at `0`. |
+
+## Basic example
 
 ```vue
 <script setup>
-import { VqDataTable, collectVqHeaders } from "@qnx/vuetify";
+import { VqDataTable } from "@qnx/vuetify";
 
-const headers = collectVqHeaders([
+const headers = [
   { title: "Name", key: "name" },
   { title: "Email", key: "email" },
-  { title: "Role", key: "role" },
-]);
+];
 </script>
 
 <template>
-  <VqDataTable
-    id="users"
-    action="users/list"
-    :headers="headers"
-  >
-    <template #item="{ item, index }">
-      <tr>
-        <td>{{ index }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
-        <td>{{ item.role }}</td>
-      </tr>
-    </template>
-  </VqDataTable>
+  <VqDataTable id="users" action="users" :headers="headers" />
 </template>
 ```
 
-## With Filters and Actions
+Without an `item` slot, cells come from each header's `key`.
+
+## Custom rows and filters
 
 ```vue
 <script setup>
-import {
-  VqDataTable, VqTableFilter, VqTextField,
-  VqDatatableItemAction, VqSerialNo, collectVqHeaders
-} from "@qnx/vuetify";
+import { VqDataTable, VqSerialNo, VqTableFilter, VqTextField, collectVqHeaders } from "@qnx/vuetify";
 
 const headers = collectVqHeaders([
   { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
   { title: "Status", key: "status" },
-  { title: "Actions", key: "actions", sortable: false },
 ]);
+
+const ignoreSubmit = () => {};
 </script>
 
 <template>
-  <!-- Filter bar -->
-  <VqTableFilter id="users">
-    <VqTextField name="search" label="Search by name or email" />
+  <VqTableFilter id="members" @submit="ignoreSubmit">
+    <VqTextField name="search" label="Search" />
   </VqTableFilter>
 
-  <!-- Table -->
   <VqDataTable
-    id="users"
-    action="users/list"
+    id="members"
+    action="members"
     :headers="headers"
     :items-per-page="20"
-    :sort-by="[{ key: 'name', order: 'asc' }]"
+    :sort-by="[{ key: 'status', order: 'desc' }]"
   >
     <template #item="{ item, index }">
       <tr>
-        <VqSerialNo :index="index" />
+        <VqSerialNo :index="index + 1" />
         <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
         <td>
-          <v-chip :color="item.status === 'active' ? 'success' : 'error'">
-            {{ item.status }}
-          </v-chip>
-        </td>
-        <td>
-          <VqDatatableItemAction
-            id="users"
-            :item-id="String(item.id)"
-            action="users/delete"
-            method="DELETE"
-            description="Are you sure you want to delete this user?"
-          />
+          <v-chip :color="item.status === 'active' ? 'success' : 'error'">{{ item.status }}</v-chip>
         </td>
       </tr>
     </template>
@@ -129,36 +98,8 @@ const headers = collectVqHeaders([
 </template>
 ```
 
-## Type-safe with useVqDataTable
+For a typed `item`, see [`useVqDataTable`](/composables/use-vq-data-table).
 
-```vue
 <script setup>
-import { useVqDataTable, collectVqHeaders } from "@qnx/vuetify";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const UserTable = useVqDataTable<User>();
-
-const headers = collectVqHeaders([
-  { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
-]);
+import DataTableExample from '../../../src/components/examples/data/DataTableExample.vue'
 </script>
-
-<template>
-  <UserTable id="users" action="users/list" :headers="headers">
-    <template #item="{ item, index }">
-      <!-- item is typed as User -->
-      <tr>
-        <td>{{ index }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
-      </tr>
-    </template>
-  </UserTable>
-</template>
-```

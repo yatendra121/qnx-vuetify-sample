@@ -1,90 +1,75 @@
 # useFormFilterRepository
 
-Programmatically control a `VqDataTable` or `VqList` — trigger a reload or full reset from outside the filter form.
+Asks a `VqList` to refetch from outside it. Call it where Pinia is active, such as in `setup`.
 
 ## Parameters
 
 | Param | Type | Description |
 |-------|------|-------------|
-| `formKey` | `string` | Filter form ID — always `${tableId}_filter` |
+| `formKey` | `string` | The list's `id` followed by `_filter`, such as `posts_filter`. |
 
 ## Returns
 
 | Method | Description |
 |--------|-------------|
-| `reload()` | Reloads the paired table/list with current filter values |
-| `reset()` | Clears filter values and reloads from page 1 |
+| `reload()` | Refetches from page 1 with the current filter values. |
+| `reset()` | Does the same. It **doesn't** clear the filter's fields. |
 
-## When to Use
+## What it works with
 
-- Add a standalone "Refresh" button outside the filter form
-- Add a "Clear Filters" button that resets and reloads
-- Trigger a table reload after an external action (e.g., bulk import, export)
+| Target | `reload()` and `reset()` |
+|--------|--------------------------|
+| `VqList` with a mounted `VqTableFilter` of the same `id` | Works |
+| `VqList` with no filter | Does nothing |
+| `VqDataTable` | Does nothing |
 
-## Basic Example
+## Refreshing a VqList
 
 ```vue
 <script setup>
-import { useFormFilterRepository } from "@qnx/vuetify";
+import {
+  VqList,
+  VqTableFilter,
+  VqTextField,
+  useFormFilterRepository,
+} from "@qnx/vuetify";
 
-// "users" is the shared id of VqTableFilter + VqDataTable
-const { reload, reset } = useFormFilterRepository("users_filter");
+const { reload } = useFormFilterRepository("posts_filter");
+const ignoreSubmit = () => {};
 </script>
 
 <template>
-  <!-- Filter Form -->
-  <VqTableFilter id="users">
+  <VqTableFilter id="posts" @submit="ignoreSubmit">
     <VqTextField name="search" label="Search" />
   </VqTableFilter>
 
-  <!-- External controls -->
-  <div class="d-flex gap-2 my-2">
-    <v-btn variant="outlined" prepend-icon="mdi-refresh" @click="reload">Refresh</v-btn>
-    <v-btn variant="outlined" prepend-icon="mdi-filter-remove" @click="reset">Clear Filters</v-btn>
-  </div>
+  <v-btn prepend-icon="mdi-refresh" @click="reload">Refresh</v-btn>
 
-  <VqDataTable id="users" action="users/list" :headers="headers" />
+  <VqList id="posts" action="posts">
+    <template #default="{ items }">
+      <v-list-item v-for="post in items" :key="post.id" :title="post.title" />
+    </template>
+  </VqList>
 </template>
 ```
 
-## Reload After Bulk Import
+## Refreshing a VqDataTable
+
+Since `reload()` doesn't reach a table, change its `key` to recreate it and fetch again:
 
 ```vue
 <script setup>
-import { useFormFilterRepository, useMessageInstance } from "@qnx/vuetify";
-import axios from "axios";
+import { ref } from "vue";
+import { VqDataTable } from "@qnx/vuetify";
 
-const message = useMessageInstance();
-const { reload } = useFormFilterRepository("users_filter");
-
-const importCSV = async (file) => {
-  const form = new FormData();
-  form.append("file", file);
-  try {
-    await axios.post("users/import", form);
-    message.success("Import successful!");
-    reload(); // Refresh table to show new records
-  } catch {
-    message.error("Import failed.");
-  }
-};
+const headers = [{ title: "Name", key: "name" }];
+const tableKey = ref(0);
 </script>
+
+<template>
+  <v-btn prepend-icon="mdi-refresh" @click="tableKey++">Refresh</v-btn>
+  <VqDataTable :key="tableKey" id="users" action="users" :headers="headers" />
+</template>
 ```
 
-## Reload After Row Delete (Without VqDatatableItemAction)
-
-```vue
-<script setup>
-import { useFormFilterRepository, useMessageInstance } from "@qnx/vuetify";
-import axios from "axios";
-
-const message = useMessageInstance();
-const { reload } = useFormFilterRepository("products_filter");
-
-const deleteProduct = async (id) => {
-  await axios.delete(`products/${id}`);
-  message.success("Product deleted.");
-  reload();
-};
-</script>
-```
+This also returns the table to its starting page and sort.

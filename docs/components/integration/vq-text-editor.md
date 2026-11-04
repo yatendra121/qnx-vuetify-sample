@@ -1,56 +1,53 @@
 # VqTextEditor
 
-A rich text editor powered by TinyMCE with full `vee-validate` form integration. Exported from the integrations entry point.
+A TinyMCE rich text editor bound to the parent form by `name`. It's exported from `@qnx/vuetify/integrations`.
 
-## Installation
+## Setup
 
-Install the TinyMCE Vue wrapper:
+TinyMCE isn't bundled. The component loads its script at runtime from `baseUrl` + `filesPath`.
 
 ```bash
-npm install @tinymce/tinymce-vue
+pnpm add @tinymce/tinymce-vue
 ```
-
-Import from the integrations entry point:
-
-```typescript
-import { VqTextEditor, setConfig } from "@qnx/vuetify/integrations";
-```
-
-## Configuration
-
-Set the base URL before using the component (typically in `main.ts`):
 
 ```typescript
 import { setConfig } from "@qnx/vuetify/integrations";
 
-setConfig({ baseUrl: "https://yourapp.com/" });
+// The trailing slash is required: the two parts are joined as they are.
+setConfig({ baseUrl: "https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/" });
 ```
 
-| Config Key | Default | Description |
-|------------|---------|-------------|
-| `baseUrl` | `"http://localhost:3000/"` | Base URL where TinyMCE assets are served |
+Without this, `baseUrl` is `http://localhost:3000/`, which only works in local development if you serve TinyMCE yourself. To self-host, serve it from `<baseUrl>static/tinymce/tinymce.min.js`, the default `filesPath`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| `label` | `string` | `""` | Label displayed above the editor |
-| `placeholder` | `string` | `""` | Placeholder text inside the editor |
-| `height` | `number` | `250` | Editor height in pixels |
-| `isDark` | `boolean` | `false` | Enables dark skin (`oxide-dark`) |
-| `baseUrl` | `string` | config value | Overrides global `setConfig` base URL for this instance |
-| `filesPath` | `string` | `"static/tinymce/tinymce.min.js"` | Path to `tinymce.min.js` relative to `baseUrl` |
+| `name` | `string` | required | The field's key in the form values. |
+| `height` | `number` | `250` | Editor height in pixels. |
+| `isDark` | `boolean` | `false` | Uses the dark skin and content style. |
+| `baseUrl` | `string` | The `setConfig` value | Where TinyMCE is hosted, with a trailing slash. |
+| `filesPath` | `string` | `"static/tinymce/tinymce.min.js"` | Path of the script, relative to `baseUrl`. |
+| `label` | `string` | `""` | Has no effect in this version. |
+| `placeholder` | `string` | `""` | Has no effect in this version. |
 
-## Basic Example
+Other attributes aren't passed to the editor.
+
+## Events and slots
+
+None. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+## Value
+
+The editor's HTML as a string.
+
+## Example
 
 ```vue
 <script setup>
 import { VqForm, VqSubmitBtn } from "@qnx/vuetify";
-import { VqTextEditor, setConfig } from "@qnx/vuetify/integrations";
+import { VqTextEditor } from "@qnx/vuetify/integrations";
 import { object, string } from "yup";
-
-setConfig({ baseUrl: "https://yourapp.com/" });
 
 const schema = object({
   content: string().required("Content is required"),
@@ -58,90 +55,19 @@ const schema = object({
 </script>
 
 <template>
-  <VqForm
-    id="create-post"
-    action="posts/create"
-    method="POST"
-    :validation-schema="schema"
-  >
+  <VqForm id="post" action="posts" :validation-schema="schema">
+    <p class="text-subtitle-2 mb-2">Content</p>
     <VqTextEditor
       name="content"
-      label="Post Content"
-      placeholder="Start writing..."
       :height="400"
+      base-url="https://cdnjs.cloudflare.com/ajax/libs/tinymce/7.9.1/"
+      files-path="tinymce.min.js"
     />
     <VqSubmitBtn>Publish</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Dark Mode
+## Limitations
 
-```vue
-<VqTextEditor
-  name="content"
-  label="Content"
-  :height="350"
-  :is-dark="true"
-/>
-```
-
-## Full Blog Post Form
-
-```vue
-<script setup>
-import { VqForm, VqTextField, VqTextarea, VqAutocomplete, VqSubmitBtn } from "@qnx/vuetify";
-import { VqTextEditor, setConfig } from "@qnx/vuetify/integrations";
-import { object, string } from "yup";
-
-setConfig({ baseUrl: import.meta.env.VITE_APP_URL });
-
-const schema = object({
-  title: string().required("Title is required"),
-  excerpt: string().required("Excerpt is required").max(160),
-  category_id: string().required("Category is required"),
-  content: string().required("Content is required"),
-});
-</script>
-
-<template>
-  <VqForm
-    id="blog-post"
-    action="posts/create"
-    method="POST"
-    :validation-schema="schema"
-  >
-    <VqTextField name="title" label="Title" />
-    <VqAutocomplete
-      name="category_id"
-      label="Category"
-      action="categories/list"
-      item-title="name"
-      item-value="id"
-    />
-    <VqTextarea name="excerpt" label="Short Excerpt" rows="2" counter maxlength="160" />
-    <VqTextEditor
-      name="content"
-      label="Full Content"
-      :height="500"
-    />
-    <VqSubmitBtn>Publish Post</VqSubmitBtn>
-  </VqForm>
-</template>
-```
-
-## Custom TinyMCE Script Path
-
-If your TinyMCE assets are in a non-default location:
-
-```vue
-<VqTextEditor
-  name="content"
-  base-url="https://cdn.example.com/"
-  files-path="vendor/tinymce/tinymce.min.js"
-/>
-```
-
-## Included Plugins
-
-`preview`, `importcss`, `searchreplace`, `autolink`, `autosave`, `save`, `directionality`, `visualblocks`, `visualchars`, `fullscreen`, `image`, `link`, `media`, `template`, `codesample`, `table`, `charmap`, `pagebreak`, `nonbreaking`, `anchor`, `insertdatetime`, `advlist`, `lists`, `wordcount`, `help`, `quickbars`, `emoticons`
+The built-in plugin list includes `template`, which TinyMCE 7 removed. With TinyMCE 7, the browser logs a failed request for that plugin, but the editor still works.

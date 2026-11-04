@@ -1,31 +1,29 @@
 # VqAutocomplete
 
-A validated autocomplete/select field. Supports static item lists and dynamic item loading from an API endpoint. Wraps Vuetify's `VAutocomplete`.
+A validated autocomplete with static options, or options loaded from your API. Wraps Vuetify's `VAutocomplete`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| `action` | `string` | `undefined` | API endpoint to fetch items from on mount |
-| `items` | `array` | `[]` | Static list of items to display |
-| *(all VAutocomplete props)* | | | All Vuetify `VAutocomplete` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
+| `items` | `array` | `[]` | Static options. Read once when the component is created. |
+| `action` | `string` | `undefined` | URL to load options from, once when the component is created. See the [response shape](/guide/server-contract#vqautocomplete). |
 
-## Features
+Any other attribute goes to [`VAutocomplete`](https://vuetifyjs.com/api/v-autocomplete), including `item-title`, `item-value`, `multiple`, and `chips`.
 
-- If `action` is provided, fetches items via axios when the component mounts
-- Shows a loading spinner while fetching
-- Works with both static `items` and dynamically loaded items
-- Supports `item-title` and `item-value` for object arrays
+## Events and slots
 
-## Static Items Example
+There are no events of its own. Listeners and slots go to `VAutocomplete`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+A failed `action` request logs to the console and leaves the options empty.
+
+## Static options
 
 ```vue
 <script setup>
 import { VqForm, VqAutocomplete, VqSubmitBtn } from "@qnx/vuetify";
 import { object, string } from "yup";
-
-const roles = ["Admin", "Editor", "Viewer", "Guest"];
 
 const schema = object({
   role: string().required("Please select a role"),
@@ -34,24 +32,18 @@ const schema = object({
 
 <template>
   <VqForm id="assign-role" action="users/role" method="PUT" :validation-schema="schema">
-    <VqAutocomplete
-      name="role"
-      label="Select Role"
-      :items="roles"
-    />
-    <VqSubmitBtn>Assign Role</VqSubmitBtn>
+    <VqAutocomplete name="role" label="Role" :items="['Admin', 'Editor', 'Viewer']" />
+    <VqSubmitBtn>Assign</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## Dynamic Items from API
-
-Items are fetched from the `action` endpoint automatically on mount:
+## Options from your API
 
 ```vue
 <script setup>
 import { VqForm, VqAutocomplete, VqSubmitBtn } from "@qnx/vuetify";
-import { object, number } from "yup";
+import { number, object } from "yup";
 
 const schema = object({
   country_id: number().required("Please select a country"),
@@ -59,11 +51,11 @@ const schema = object({
 </script>
 
 <template>
-  <VqForm id="user-profile" action="profile/update" method="PUT" :validation-schema="schema">
+  <VqForm id="address" action="address" :validation-schema="schema">
     <VqAutocomplete
       name="country_id"
       label="Country"
-      action="countries/list"
+      action="countries"
       item-title="name"
       item-value="id"
     />
@@ -72,67 +64,35 @@ const schema = object({
 </template>
 ```
 
-## Object Items with Custom Keys
+## Multiple selection
 
 ```vue
-<script setup>
-const categories = [
-  { id: 1, label: "Technology" },
-  { id: 2, label: "Health" },
-  { id: 3, label: "Finance" },
-];
-</script>
-
 <template>
   <VqAutocomplete
-    name="category_id"
-    label="Category"
-    :items="categories"
-    item-title="label"
-    item-value="id"
+    name="tags"
+    label="Tags"
+    :items="['Vue', 'Vuetify', 'TypeScript']"
+    multiple
+    chips
+    closable-chips
   />
 </template>
 ```
 
-## Multiple Selection
+## Options that change
 
-```vue
-<VqAutocomplete
-  name="tags"
-  label="Tags"
-  :items="['Vue', 'Vuetify', 'TypeScript', 'Pinia']"
-  multiple
-  chips
-  closable-chips
-/>
-```
-
-## Full Registration Form
+`items` and `action` are only read once. To load different options, for example cities for a selected country, give the component a new `key`:
 
 ```vue
 <script setup>
-import { VqForm, VqTextField, VqAutocomplete, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string, number } from "yup";
+import { computed, ref } from "vue";
+import { VqAutocomplete } from "@qnx/vuetify";
 
-const schema = object({
-  name: string().required(),
-  email: string().required().email(),
-  department_id: number().required("Department is required"),
-});
+const countryId = ref(1);
+const citiesUrl = computed(() => `countries/${countryId.value}/cities`);
 </script>
 
 <template>
-  <VqForm id="add-employee" action="employees/create" :validation-schema="schema">
-    <VqTextField name="name" label="Full Name" />
-    <VqTextField name="email" label="Email" type="email" />
-    <VqAutocomplete
-      name="department_id"
-      label="Department"
-      action="departments/list"
-      item-title="name"
-      item-value="id"
-    />
-    <VqSubmitBtn>Add Employee</VqSubmitBtn>
-  </VqForm>
+  <VqAutocomplete :key="citiesUrl" name="city_id" label="City" :action="citiesUrl" />
 </template>
 ```

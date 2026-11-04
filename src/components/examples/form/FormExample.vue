@@ -12,18 +12,20 @@
     <!-- All input cards are wrapped in a single VqForm -->
     <vq-form
       id="showcase-form"
-      action="https://nx-next-ecommerce-production.up.railway.app/api/user"
+      action="users"
       :validation-schema="userSchema"
-      :error-response-handler="errorHandler"
-      @submited-success="handleResponse"
-      @submited-client-error="handleResponse"
-      @submited-error="handleResponse"
+      @submited-success="onSuccess"
+      @submited-error="onError"
     >
       <TextInputsCard />
       <AutocompleteCard />
       <DateTimeColorCard />
       <FileInputsCard />
       <ToggleInputsCard />
+
+      <v-alert v-if="result" :type="result.type" variant="tonal" class="mb-4">
+        {{ result.message }}
+      </v-alert>
 
       <!-- Submit -->
       <v-card variant="outlined" rounded="lg" border>
@@ -39,10 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { object, string, number, array, boolean, mixed } from 'yup'
+import { ref } from 'vue'
+import { object, string, number, array, boolean, date, mixed } from 'yup'
 import { VqSubmitBtn } from '@qnx/vuetify'
-import type { ApiResponseValue } from '@qnx/composables'
-import type { AxiosError } from 'axios'
+import type { ApiResponse } from '@qnx/composables'
 
 import TextInputsCard from './TextInputsCard.vue'
 import AutocompleteCard from './AutocompleteCard.vue'
@@ -51,37 +53,40 @@ import FileInputsCard from './FileInputsCard.vue'
 import ToggleInputsCard from './ToggleInputsCard.vue'
 
 // ── Validation schema ──────────────────────────────────────────────────────
+// Only name and email are required, so the demo is quick to submit.
 const userSchema = object({
   // Text inputs
   name:     string().required().min(2).max(50).label('Full Name'),
   email:    string().email().required().label('E-mail'),
-  mobileNo: number().typeError('Mobile Number must be a number').required().label('Mobile Number'),
-  address:  string().required().min(5).label('Address'),
-  otp:      string().required().length(6, 'OTP must be exactly 6 digits').label('OTP'),
+  mobileNo: number().typeError('Mobile Number must be a number').label('Mobile Number'),
+  address:  string().label('Address'),
 
   // Autocomplete
-  gender: string().required().oneOf(['male', 'female', 'other']).label('Gender'),
-  roles:  array().of(string()).min(1, 'Select at least one role').required().label('Roles'),
-  userId: string().required().label('User'),
+  gender: string().oneOf(['male', 'female', 'other']).label('Gender'),
+  roles:  array().of(string()).label('Roles'),
+  userId: number().label('User'),
 
   // Date / Time / Color
-  date:  string().required().label('Date'),
-  time:  string().required().label('Time'),
-  color: string().required().label('Color'),
+  date:  date().label('Date'),
+  time:  string().label('Time'),
+  color: string().label('Color'),
 
-  // File
-  file: mixed().required().label('Attachment'),
+  // File: VqFileInput stores its value under `name[file]`
+  'file[file]': mixed().label('Attachment'),
 
   // Toggles
   isAdmin: boolean().label('Is Admin'),
 })
 
 // ── Response handlers ──────────────────────────────────────────────────────
-const handleResponse = (res: any) => {
-  alert(JSON.stringify(res))
+const result = ref<{ type: 'success' | 'error'; message?: string }>()
+
+const onSuccess = (res: ApiResponse) => {
+  result.value = { type: 'success', message: res.getMessage() }
 }
 
-const errorHandler = (res: AxiosError<ApiResponseValue>) => {
-  alert(JSON.stringify(res.response?.data))
+// Submit the name "taken" to see a server error land on its field.
+const onError = (res: ApiResponse) => {
+  result.value = { type: 'error', message: res.getMessage() }
 }
 </script>

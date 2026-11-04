@@ -13,7 +13,6 @@
           <div class="text-caption text-medium-emphasis mb-1">
             vq-autocomplete (local items)
           </div>
-          <!-- variant="filled" is the Vuetify 4 default -->
           <vq-autocomplete
             variant="outlined"
             :items="genderItems"
@@ -26,7 +25,6 @@
           <div class="text-caption text-medium-emphasis mb-1">
             vq-autocomplete (multiple + chips)
           </div>
-          <!-- chips + closable-chips: Vuetify 4 multi-select pattern -->
           <vq-autocomplete
             variant="outlined"
             :items="roleItems"
@@ -45,7 +43,7 @@
           </div>
           <vq-autocomplete
             variant="outlined"
-            action="https://nx-next-ecommerce-production.up.railway.app/api/user"
+            action="users"
             item-title="name"
             item-value="id"
             label="User (remote)"

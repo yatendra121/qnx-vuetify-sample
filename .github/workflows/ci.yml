@@ -34,6 +34,9 @@ jobs:
       - name: Test App Build
         run: pnpm build
 
+      - name: Check Docs Examples and Links
+        run: pnpm docs:check
+
       - name: Test Docs Build
         run: pnpm docs:build
 

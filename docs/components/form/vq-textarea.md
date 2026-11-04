@@ -1,15 +1,20 @@
 # VqTextarea
 
-A validated multi-line text input. Wraps Vuetify's `VTextarea` with automatic `vee-validate` integration.
+A validated multi-line text input. Wraps Vuetify's `VTextarea` and binds to the parent form by `name`.
 
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | `string` | required | Field name for form binding |
-| *(all VTextarea props)* | | | All Vuetify `VTextarea` props are forwarded |
+| `name` | `string` | required | The field's key in the form values. |
 
-## Basic Example
+Any other attribute goes to [`VTextarea`](https://vuetifyjs.com/api/v-textarea), including `rows`, `auto-grow`, and `counter`.
+
+## Events and slots
+
+There are no events of its own. Listeners and slots go to `VTextarea`. Don't use `v-model`: see [Values and v-model](/guide/usage/#values-and-v-model).
+
+## Example
 
 ```vue
 <script setup>
@@ -22,75 +27,17 @@ const schema = object({
 </script>
 
 <template>
-  <VqForm id="contact" action="contact/send" :validation-schema="schema">
-    <VqTextarea
-      name="message"
-      label="Message"
-      placeholder="Write your message here..."
-      rows="4"
-    />
-    <VqSubmitBtn>Send Message</VqSubmitBtn>
+  <VqForm id="contact" action="contact" :validation-schema="schema">
+    <VqTextarea name="message" label="Message" :rows="4" counter />
+    <VqSubmitBtn>Send</VqSubmitBtn>
   </VqForm>
 </template>
 ```
 
-## With Character Counter
+## Auto-grow
 
 ```vue
-<VqTextarea
-  name="bio"
-  label="Bio"
-  counter
-  maxlength="200"
-  rows="3"
-  hint="Max 200 characters"
-  persistent-hint
-/>
-```
-
-## Auto-grow Textarea
-
-```vue
-<VqTextarea
-  name="notes"
-  label="Notes"
-  auto-grow
-  :rows="2"
-  :max-rows="10"
-/>
-```
-
-## Full Example — Blog Post Form
-
-```vue
-<script setup>
-import { VqForm, VqTextField, VqTextarea, VqSubmitBtn } from "@qnx/vuetify";
-import { object, string } from "yup";
-
-const schema = object({
-  title: string().required("Title is required"),
-  excerpt: string().required("Excerpt is required").max(160, "Max 160 characters"),
-  content: string().required("Content is required").min(50, "Min 50 characters"),
-});
-</script>
-
 <template>
-  <VqForm id="post" action="posts/create" method="POST" :validation-schema="schema">
-    <VqTextField name="title" label="Post Title" />
-    <VqTextarea
-      name="excerpt"
-      label="Short Excerpt"
-      rows="2"
-      counter
-      maxlength="160"
-    />
-    <VqTextarea
-      name="content"
-      label="Full Content"
-      auto-grow
-      :rows="6"
-    />
-    <VqSubmitBtn>Publish Post</VqSubmitBtn>
-  </VqForm>
+  <VqTextarea name="notes" label="Notes" auto-grow :rows="2" :max-rows="10" />
 </template>
 ```

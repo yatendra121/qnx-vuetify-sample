@@ -1,66 +1,31 @@
 # collectVqHeaders
 
-Utility function that prepends a serial number (`#`) column to a data table headers array.
+Adds a `#` column to the start of a table's headers. Use it with [`VqSerialNo`](/components/data/vq-serial-no).
 
 ## Signature
 
-```typescript
-function collectVqHeaders(headers: DataTableHeader[]): DataTableHeader[]
+```ts
+function collectVqHeaders<T extends unknown[]>(headers: T): unknown[];
 ```
-
-## Parameters
-
-| Param | Type | Description |
-|-------|------|-------------|
-| `headers` | `DataTableHeader[]` | Vuetify column header objects |
 
 ## Returns
 
-A new headers array with `{ title: '#', sortable: false }` at index `0`.
+A new array, starting with `{ title: "#", sortable: false }`.
 
 ## Example
 
-```typescript
+```ts
 import { collectVqHeaders } from "@qnx/vuetify";
 
 const headers = collectVqHeaders([
   { title: "Name", key: "name" },
   { title: "Email", key: "email" },
-  { title: "Role", key: "role" },
-  { title: "Actions", key: "actions", sortable: false },
 ]);
-
-// Result:
 // [
 //   { title: "#", sortable: false },
 //   { title: "Name", key: "name" },
 //   { title: "Email", key: "email" },
-//   { title: "Role", key: "role" },
-//   { title: "Actions", key: "actions", sortable: false },
 // ]
 ```
 
-## Full Usage
-
-```vue
-<script setup>
-import { VqDataTable, VqSerialNo, collectVqHeaders } from "@qnx/vuetify";
-
-const headers = collectVqHeaders([
-  { title: "Name", key: "name" },
-  { title: "Email", key: "email" },
-]);
-</script>
-
-<template>
-  <VqDataTable id="users" action="users/list" :headers="headers">
-    <template #item="{ item, index }">
-      <tr>
-        <VqSerialNo :index="index" />
-        <td>{{ item.name }}</td>
-        <td>{{ item.email }}</td>
-      </tr>
-    </template>
-  </VqDataTable>
-</template>
-```
+The added header has no `key`, so render rows yourself with the `item` slot, as in the [`VqSerialNo` example](/components/data/vq-serial-no#example).

@@ -1,16 +1,16 @@
-<script setup>
-import ListExample from '../../../src/components/examples/data/ListExample.vue'
-</script>
-
 # VqList
 
-An infinite-scroll list component that fetches paginated data from an API and appends items as the user loads more. Integrates with `VqTableFilter` for filtering.
+A list that fetches pages from your API and appends each new page to the items it has. Wraps Vuetify's `VList`.
 
-## Live Demo
+It loads the next page when asked, usually by [`VqListLoadMoreBtn`](/components/data/vq-list-load-more-btn), and doesn't watch scrolling by itself.
+
+## Live demo
 
 <VDemo>
   <ListExample />
 </VDemo>
+
+The demo uses an in-browser mock API.
 
 ::: details View source code
 <<< ../../../src/components/examples/data/ListExample.vue
@@ -20,26 +20,30 @@ An infinite-scroll list component that fetches paginated data from an API and ap
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `id` | `string` | required | Unique list ID — must match the paired `VqTableFilter` `id` |
-| `action` | `string` | required | API endpoint for fetching items |
-| `pageSize` | `number` | `10` | Number of items to fetch per request |
+| `id` | `string` | required | Identifies the list. A `VqTableFilter` with the same `id` filters it. |
+| `action` | `string` | required | URL to fetch from, always with `GET`. See the [Server Contract](/guide/server-contract#vqlist). |
+| `pageSize` | `number` | `10` | Sent as `page_size`. Read once. |
 
-## Default Slot Props
+Any other attribute goes to [`VList`](https://vuetifyjs.com/api/v-list).
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `items` | `TValue[]` | Array of all loaded items |
-| `loadMore` | `() => void` | Manually trigger loading the next page |
-| `finished` | `boolean` | `true` when all items have been loaded |
-| `loading` | `boolean` | `true` while an API request is in progress |
+## Events
 
-## Features
+There are no events of its own. A failed request fails silently: see [Limitations](/guide/limitations#tables-and-lists).
 
-- Appends new items to the list on each load (true infinite scroll)
-- Resets to page 1 and reloads when filter values change
-- Provides `vqList` injection for `VqListLoadMoreBtn`
+## Slots
 
-## Basic Example
+| Slot | Props | Description |
+|------|-------|-------------|
+| `default` | See below | The list's content. |
+
+| Slot prop | Type | Description |
+|-----------|------|-------------|
+| `items` | `array` | Every item loaded so far. |
+| `loadMore` | `() => void` | Fetches the next page. |
+| `finished` | `boolean` | `true` once every item has loaded. |
+| `loading` | `boolean` | `true` during a request. |
+
+## Basic example
 
 ```vue
 <script setup>
@@ -47,103 +51,36 @@ import { VqList, VqListLoadMoreBtn } from "@qnx/vuetify";
 </script>
 
 <template>
-  <VqList id="posts" action="posts/list" v-slot="{ items, loading }">
-    <v-list>
-      <v-list-item
-        v-for="post in items"
-        :key="post.id"
-        :title="post.title"
-        :subtitle="post.category"
-      />
-    </v-list>
-    <v-skeleton-loader v-if="loading" type="list-item@3" />
-    <VqListLoadMoreBtn />
+  <VqList id="posts" action="posts" :page-size="15">
+    <template #default="{ items }">
+      <v-list-item v-for="post in items" :key="post.id" :title="post.title" />
+      <VqListLoadMoreBtn />
+    </template>
   </VqList>
 </template>
 ```
 
-## With Filters
+## Your own controls
 
 ```vue
 <script setup>
-import { VqList, VqListLoadMoreBtn, VqTableFilter, VqTextField } from "@qnx/vuetify";
+import { VqList } from "@qnx/vuetify";
 </script>
 
 <template>
-  <VqTableFilter id="products">
-    <v-row>
-      <v-col cols="6">
-        <VqTextField name="search" label="Search" />
-      </v-col>
-      <v-col cols="6">
-        <VqAutocomplete name="category" label="Category" :items="categories" />
-      </v-col>
-    </v-row>
-  </VqTableFilter>
-
-  <VqList id="products" action="products/list" :page-size="12" v-slot="{ items, loading, finished }">
-    <v-row>
-      <v-col v-for="product in items" :key="product.id" cols="12" md="4">
-        <v-card>
-          <v-card-title>{{ product.name }}</v-card-title>
-          <v-card-text>{{ product.price }}</v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-skeleton-loader v-if="loading" type="card@3" />
-    <p v-if="finished && !items.length" class="text-center">No products found.</p>
-    <VqListLoadMoreBtn />
+  <VqList id="articles" action="articles">
+    <template #default="{ items, loadMore, loading, finished }">
+      <v-list-item v-for="article in items" :key="article.id" :title="article.title" />
+      <v-progress-linear v-if="loading" indeterminate />
+      <v-btn v-if="!finished" :disabled="loading" @click="loadMore">More</v-btn>
+      <p v-else>All articles loaded.</p>
+    </template>
   </VqList>
 </template>
 ```
 
-## Type-safe with useVqList
+For typed items, see [`useVqList`](/composables/use-vq-list).
 
-```vue
 <script setup>
-import { useVqList, VqListLoadMoreBtn } from "@qnx/vuetify";
-
-interface Post {
-  id: number;
-  title: string;
-  author: string;
-}
-
-const PostList = useVqList<Post>();
+import ListExample from '../../../src/components/examples/data/ListExample.vue'
 </script>
-
-<template>
-  <PostList id="posts" action="posts/list" v-slot="{ items }">
-    <!-- items is typed as Post[] -->
-    <v-list-item
-      v-for="post in items"
-      :key="post.id"
-      :title="post.title"
-      :subtitle="post.author"
-    />
-    <VqListLoadMoreBtn />
-  </PostList>
-</template>
-```
-
-## Manual Load More (No Button)
-
-Use the `loadMore` slot prop to trigger loading programmatically:
-
-```vue
-<VqList id="posts" action="posts/list" v-slot="{ items, loadMore, finished, loading }">
-  <v-list-item v-for="post in items" :key="post.id">{{ post.title }}</v-list-item>
-
-  <v-btn
-    v-if="!finished"
-    :loading="loading"
-    @click="loadMore"
-    block
-    class="mt-4"
-  >
-    Load More Posts
-  </v-btn>
-
-  <p v-if="finished" class="text-center text-grey mt-4">All posts loaded.</p>
-</VqList>
-```

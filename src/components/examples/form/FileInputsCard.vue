@@ -11,7 +11,6 @@
       <v-row>
         <v-col cols="12" md="6">
           <div class="text-caption text-medium-emphasis mb-1">vq-file-input</div>
-          <!-- variant="filled" is the Vuetify 4 default -->
           <vq-file-input
             variant="outlined"
             label="Attachment"
