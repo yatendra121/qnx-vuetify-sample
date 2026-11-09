@@ -2,3 +2,5 @@ packages:
   - .
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@qnx/vuetify@0.9.0'
