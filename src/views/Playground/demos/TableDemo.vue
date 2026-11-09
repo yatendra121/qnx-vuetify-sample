@@ -14,7 +14,7 @@
     :key="remount"
     :action="mockAction('members', config.mockMode, config.mockLatency)"
     :headers="columns"
-    :sort-by="[{ key: String(config.sortKey), order: config.sortOrder }]"
+    :sort-by="[{ key: String(config.sortKey), order: config.sortOrder as 'asc' | 'desc' }]"
     v-bind="tableProps"
     @update:options="onOptions"
     @update:page="log('update:page', $event)"
